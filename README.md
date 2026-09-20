@@ -72,6 +72,30 @@ The application is deployed on AWS with genuine, production-grade infrastructure
 
 ---
 
+## 📸 Application Screenshots
+
+### 1. Queue Abandonment Overview
+![Queue Abandonment Overview](docs/screenshots/01_queue_abandonment_overview.png)
+*High-level executive dashboard tracking system-wide ghost rates, offered volume, average wait duration, and priority triage actions.*
+
+### 2. Ghost Zones Intelligence
+![Ghost Zones Intelligence](docs/screenshots/02_ghost_zones_intelligence.png)
+*Ranked table of operational queues and service stages classified by drop-out volume, wait time, and automated statistical severity tiers.*
+
+### 3. Ghost Replay & Session Reconstruction
+![Ghost Replay & Session Reconstruction](docs/screenshots/03_ghost_replay_journey.png)
+*Chronological step-by-step reconstruction of individual customer journeys identifying the exact transition point where abandonment occurred.*
+
+### 4. AI Root-Cause Investigator
+![AI Root-Cause Investigator](docs/screenshots/04_ai_investigator_diagnostics.png)
+*Hybrid root-cause intelligence engine synthesizing empirical queue metrics into confidence-scored hypotheses and prioritized operational next steps.*
+
+### 5. What-If Scenario Simulator
+![What-If Scenario Simulator](docs/screenshots/05_whatif_scenario_simulator.png)
+*Interactive Erlang-C capacity and elasticity simulator modeling the impact of staffing adjustments, arrival surges, and handling times on ghost rates.*
+
+---
+
 ## 🌟 Key Capabilities
 
 ### 1. 📊 Executive Abandonment Overview & KPI Engine
