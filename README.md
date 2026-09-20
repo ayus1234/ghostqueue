@@ -3,6 +3,7 @@
 > **Human Process Abandonment Intelligence**  
 > *Find where people disappear. Understand why. Test what could change.*
 
+[![Demo Video](https://img.shields.io/badge/Demo%20Video-Google%20Drive-FF8800?logo=googledrive&logoColor=white)](https://drive.google.com/file/d/1YXwpFSI3xwr1x3jutgWcElojKXQExDut/view?usp=sharing)
 [![SSL / HTTPS](https://img.shields.io/badge/SSL%20%2F%20TLS-Secure%20HTTPS-brightgreen?logo=letsencrypt&logoColor=white)](https://44.212.26.59.sslip.io/)
 [![AWS Deployed](https://img.shields.io/badge/AWS-Live%20Deployment-232F3E?logo=amazon-aws&logoColor=white)](https://44.212.26.59.sslip.io/)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16%20(Turbopack)-000000?logo=next.js&logoColor=white)](https://nextjs.org/)
@@ -13,12 +14,25 @@
 
 ---
 
+## 🎬 Product Demo Video
+
+🎥 **Watch the Full Video Walkthrough**: **[GhostQueue Project Demo (Google Drive)](https://drive.google.com/file/d/1YXwpFSI3xwr1x3jutgWcElojKXQExDut/view?usp=sharing)**
+
+A 3-minute video presentation covering:
+- **Project Overview**: Uncovering hidden queue abandonment across contact centers and operational journeys.
+- **Interactive UI Tour**: Executive KPIs, Ghost Zones severity ranking, Ghost Replay journey reconstruction, and What-If capacity simulation.
+- **Hybrid AI Architecture**: Amazon Bedrock integration using secretless IAM instance roles with automatic deterministic fallback.
+- **AWS Infrastructure**: Production deployment on Amazon EC2 with Let's Encrypt TLS 1.3 encryption.
+
+---
+
 ## 🌐 Live Public Deployment (HTTPS Enabled)
 
 GhostQueue is deployed on AWS with **end-to-end SSL/TLS encryption (HTTPS)** and automatic HTTP-to-HTTPS redirection:
 
 | Service | Secure HTTPS URL | Description |
 | :--- | :--- | :--- |
+| **Demo Video** | **[Watch Demo Video](https://drive.google.com/file/d/1YXwpFSI3xwr1x3jutgWcElojKXQExDut/view?usp=sharing)** | 3-minute video walkthrough covering architecture and live UI |
 | **Frontend Application** | **[https://44.212.26.59.sslip.io/](https://44.212.26.59.sslip.io/)** | Production Next.js 16 web dashboard with Light/Dark theming |
 | **API Health Check** | **[https://44.212.26.59.sslip.io/health](https://44.212.26.59.sslip.io/health)** | Live FastAPI service health & runtime status |
 | **Interactive API Docs** | **[https://44.212.26.59.sslip.io/docs](https://44.212.26.59.sslip.io/docs)** | Swagger UI for executing and testing API endpoints |
