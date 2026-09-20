@@ -20,9 +20,11 @@ import {
 } from "../types";
 
 const RAW_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL !== undefined
+  process.env.NEXT_PUBLIC_API_BASE_URL !== undefined && process.env.NEXT_PUBLIC_API_BASE_URL !== ""
     ? process.env.NEXT_PUBLIC_API_BASE_URL
-    : "http://localhost:8000";
+    : typeof window !== "undefined"
+      ? ""
+      : "http://localhost:8000";
 const API_BASE = RAW_BASE_URL.replace(/\/+$/, "");
 
 async function handleResponse<T>(res: Response, fallbackMessage: string): Promise<T> {
