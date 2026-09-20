@@ -1,5 +1,10 @@
 [tool.pyright]
-extraPaths = ["backend"]
+extraPaths = [
+  "backend",
+  "C:/Users/hp/.venv/Lib/site-packages",
+  "C:/Python313/Lib/site-packages",
+  "C:/Python312/Lib/site-packages"
+]
 
 [tool.pytest.ini_options]
 pythonpath = ["backend"]

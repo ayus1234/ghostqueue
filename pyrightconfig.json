@@ -1,5 +1,8 @@
 {
   "extraPaths": [
-    "backend"
+    "backend",
+    "C:/Users/hp/.venv/Lib/site-packages",
+    "C:/Python313/Lib/site-packages",
+    "C:/Python312/Lib/site-packages"
   ]
 }
