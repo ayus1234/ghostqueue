@@ -8,7 +8,7 @@
 [![Next.js 16](https://img.shields.io/badge/Next.js-16%20(Turbopack)-000000?logo=next.js&logoColor=white)](https://nextjs.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/Tests-75%20Passing-brightgreen)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-77%20Passing-brightgreen)](tests/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 ---
@@ -58,16 +58,16 @@ The application is deployed on AWS with genuine, production-grade infrastructure
                                                        ▼
                                                 AWS IAM Role
                                          (ghostqueue-ec2-profile)
-                                                       │
-                                                       ▼
-                                            Amazon Bedrock API
-                                       (Claude 3 Haiku / Titan)
+                                                        │
+                                                        ▼
+                                             Amazon Bedrock API
+                                       (Amazon Nova / Claude / Titan)
 ```
 
 - **Amazon EC2**: High-performance compute (`t3.small`) hosting both the Node.js frontend and Python FastAPI backend under systemd supervision.
 - **SSL/TLS Encryption**: Verified TLS 1.3 certificates via Let's Encrypt with automated certbot renewals and strict HTTP-to-HTTPS redirection.
 - **Nginx Reverse Proxy**: Eliminates cross-origin CORS overhead by serving web assets and proxying `/api/` over HTTPS.
-- **AWS IAM & Amazon Bedrock**: Configured with `AmazonBedrockFullAccess` to empower the AI Investigator with root-cause intelligence.
+- **AWS IAM & Amazon Bedrock**: Configured with `AmazonBedrockFullAccess` and IAM instance profile (`ghostqueue-ec2-profile`) for secretless foundation model inference.
 - **Zero Localhost Leaks**: Production build strictly relies on dynamic same-origin API calls over secure HTTPS.
 
 ---
@@ -90,7 +90,10 @@ The application is deployed on AWS with genuine, production-grade infrastructure
 - **Unresolved Session Reconstruction**: Isolates drop-out interactions for granular root-cause inspection.
 
 ### 4. 🧠 AI Investigator (Root-Cause Engine)
-- **Hybrid Diagnostic Architecture**: Powered by a deterministic rule-based engine and an optional Amazon Bedrock LLM provider.
+- **Hybrid Diagnostic Architecture**: Powered by Amazon Bedrock (with native IAM instance profile authentication) and a built-in deterministic heuristic engine.
+- **Zero Secret Keys Required**: Authenticates automatically via EC2 IAM Instance Profile (`ghostqueue-ec2-profile`) using short-lived tokens—zero hardcoded credentials or `.env` secrets.
+- **Strict Privacy Boundary**: Transmits strictly derived mathematical aggregates and summary distributions to Amazon Bedrock; zero raw dataset rows, customer records, or PII are ever sent.
+- **Graceful Deterministic Fallback**: If Bedrock is unavailable or model authorization is pending, automatically falls back to the deterministic engine without breaking runtime operations.
 - **Structured Output**: Generates executive finding summaries, empirical observations, confidence-scored hypotheses (High/Medium/Low), and prioritized next operational actions.
 - **Grounded Evidence**: Directly links hypotheses back to empirical metrics (e.g., specific wait thresholds, peak periods).
 
@@ -137,7 +140,7 @@ ghostqueue/
 │   ├── components/           # AppShell, Charts, Tables, Simulator, Investigator, Replay
 │   ├── lib/                  # API client bindings
 │   └── types/                # TypeScript interface definitions
-├── tests/                    # Pytest test suite (75 passing tests)
+├── tests/                    # Pytest test suite (77 passing tests)
 └── docs/                     # Technical architecture documentation
 ```
 
@@ -199,7 +202,7 @@ Run the full backend test suite:
 ```bash
 python -m pytest
 ```
-*Current status: 75 tests passing across analytics, ingestion, simulation, investigator, privacy, and registry validation.*
+*Current status: 77 tests passing across analytics, ingestion, simulation, investigator, privacy, and registry validation.*
 
 Validate frontend build:
 ```bash
