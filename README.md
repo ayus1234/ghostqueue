@@ -90,10 +90,10 @@ The application is deployed on AWS with genuine, production-grade infrastructure
 - **Unresolved Session Reconstruction**: Isolates drop-out interactions for granular root-cause inspection.
 
 ### 4. 🧠 AI Investigator (Root-Cause Engine)
-- **Hybrid Diagnostic Architecture**: Powered by Amazon Bedrock (with native IAM instance profile authentication) and a built-in deterministic heuristic engine.
+- **Hybrid Diagnostic Architecture**: GhostQueue integrates Amazon Bedrock (Amazon Nova Micro) as the LLM-powered AI Investigator, paired with an automatic deterministic evidence-based fallback when Bedrock is unavailable or model access is pending authorization.
 - **Zero Secret Keys Required**: Authenticates automatically via EC2 IAM Instance Profile (`ghostqueue-ec2-profile`) using short-lived tokens—zero hardcoded credentials or `.env` secrets.
 - **Strict Privacy Boundary**: Transmits strictly derived mathematical aggregates and summary distributions to Amazon Bedrock; zero raw dataset rows, customer records, or PII are ever sent.
-- **Graceful Deterministic Fallback**: If Bedrock is unavailable or model authorization is pending, automatically falls back to the deterministic engine without breaking runtime operations.
+- **Graceful Deterministic Fallback**: When Bedrock invocation returns an authorization error or is unreachable, the system automatically falls back to the deterministic engine without interrupting runtime operations, surfacing the fallback reason transparently in the audit trail.
 - **Structured Output**: Generates executive finding summaries, empirical observations, confidence-scored hypotheses (High/Medium/Low), and prioritized next operational actions.
 - **Grounded Evidence**: Directly links hypotheses back to empirical metrics (e.g., specific wait thresholds, peak periods).
 
