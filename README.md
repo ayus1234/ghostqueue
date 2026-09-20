@@ -32,12 +32,12 @@ GhostQueue is deployed on AWS with **end-to-end SSL/TLS encryption (HTTPS)** and
 
 | Service | Secure HTTPS URL | Description |
 | :--- | :--- | :--- |
-| **Demo Video** | **[Watch Demo Video](https://drive.google.com/file/d/1YXwpFSI3xwr1x3jutgWcElojKXQExDut/view?usp=sharing)** | 3-minute video walkthrough covering architecture and live UI |
+| **Demo Video** | **[https://drive.google.com/file/d/1YXwpFSI3xwr1x3jutgWcElojKXQExDut/view?usp=sharing](https://drive.google.com/file/d/1YXwpFSI3xwr1x3jutgWcElojKXQExDut/view?usp=sharing)** | 3-minute video walkthrough covering architecture and live UI |
 | **Frontend Application** | **[https://44.212.26.59.sslip.io/](https://44.212.26.59.sslip.io/)** | Production Next.js 16 web dashboard with Light/Dark theming |
 | **API Health Check** | **[https://44.212.26.59.sslip.io/health](https://44.212.26.59.sslip.io/health)** | Live FastAPI service health & runtime status |
 | **Interactive API Docs** | **[https://44.212.26.59.sslip.io/docs](https://44.212.26.59.sslip.io/docs)** | Swagger UI for executing and testing API endpoints |
 | **Alternative Secure URL** | **[https://44.212.26.59.nip.io/](https://44.212.26.59.nip.io/)** | Secondary trusted TLS domain alias |
-| **HTTP Auto-Redirect** | `http://44.212.26.59/` | Permanent 301 redirect to secure HTTPS |
+| **HTTP Auto-Redirect** | **[http://44.212.26.59/](http://44.212.26.59/)** | Permanent 301 redirect to secure HTTPS |
 
 ---
 
