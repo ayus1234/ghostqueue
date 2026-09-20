@@ -136,3 +136,105 @@ def test_investigator_api_endpoint_with_upload():
     report = res.json()
     assert "Billing" in report["executive_finding"]
     assert report["privacy_status"]["persisted"] is False
+
+
+def test_bedrock_provider_invocation_and_pii_boundary(monkeypatch, erlang_analysis):
+    """Verify Bedrock invocation format and verify ZERO raw rows or PII are passed in context."""
+    from unittest.mock import MagicMock
+    import json
+    import sys
+
+    monkeypatch.setenv("AI_INVESTIGATOR_PROVIDER", "bedrock")
+    monkeypatch.setenv("AWS_BEDROCK_MODEL_ID", "amazon.nova-micro-v1:0")
+
+    provider = LLMInvestigatorProvider()
+    assert provider.is_bedrock is True
+    assert "AmazonBedrock" in provider.provider_name
+
+    # Mock boto3 module and client
+    mock_boto_client = MagicMock()
+    mock_boto3 = MagicMock()
+    mock_boto3.client.return_value = mock_boto_client
+    monkeypatch.setitem(sys.modules, "boto3", mock_boto3)
+
+    mock_response = {
+        "output": {
+            "message": {
+                "content": [
+                    {
+                        "text": json.dumps({
+                            "executive_finding": "Bedrock identified queue bottleneck in Retention.",
+                            "observations": [
+                                {
+                                    "title": "High drop-off in Retention",
+                                    "evidence": "3.97% ghost rate observed",
+                                    "metric": "ghost_rate",
+                                    "value": "3.97%",
+                                    "source_capability": "ghost_zones"
+                                }
+                            ],
+                            "hypotheses": [
+                                {
+                                    "hypothesis": "Staffing mismatch during peak intervals",
+                                    "supporting_evidence": "Spike in wait times",
+                                    "confidence": "high",
+                                    "confidence_rationale": "Directly correlated with peak drop-offs"
+                                }
+                            ],
+                            "next_actions": [
+                                {
+                                    "action": "Increase Retention queue staffing",
+                                    "reason": "Address high friction",
+                                    "expected_investigative_value": "Immediate reduction in abandoned interactions"
+                                }
+                            ]
+                        })
+                    }
+                ]
+            }
+        }
+    }
+    mock_boto_client.converse.return_value = mock_response
+
+    report = provider.generate_investigation(erlang_analysis)
+    assert report is not None
+    assert "Bedrock identified queue bottleneck" in report.executive_finding
+    assert len(report.observations) == 1
+    assert report.observations[0].title == "High drop-off in Retention"
+
+    # Verify that mock converse was called and verify payload contains NO raw rows
+    assert mock_boto_client.converse.called
+    call_args = mock_boto_client.converse.call_args
+    prompt_text = call_args[1]["messages"][0]["content"][0]["text"]
+    
+    # Assert NO raw dataframe rows or personal customer data is present
+    assert "PRIVACY RULE" in prompt_text
+    assert "session_id" not in prompt_text
+    assert "phone" not in prompt_text
+    assert "email" not in prompt_text
+
+
+def test_bedrock_provider_error_fallback(monkeypatch, erlang_analysis):
+    """Verify that when Bedrock fails (e.g. model authorization error), it gracefully falls back to deterministic."""
+    from unittest.mock import MagicMock
+    import sys
+
+    monkeypatch.setenv("AI_INVESTIGATOR_PROVIDER", "bedrock")
+    monkeypatch.setenv("AWS_BEDROCK_MODEL_ID", "amazon.nova-micro-v1:0")
+
+    provider = LLMInvestigatorProvider()
+
+    mock_boto_client = MagicMock()
+    mock_boto_client.converse.side_effect = Exception("ValidationException: Operation not allowed")
+    mock_boto3 = MagicMock()
+    mock_boto3.client.return_value = mock_boto_client
+    monkeypatch.setitem(sys.modules, "boto3", mock_boto3)
+
+    report = provider.generate_investigation(erlang_analysis)
+    assert report is not None
+    assert len(report.observations) > 0
+    assert len(report.hypotheses) > 0
+    # Must contain the Bedrock attempted notice and fallback detail
+    assert any("Amazon Bedrock attempted" in lim and "ValidationException" in lim for lim in report.limitations)
+
+
