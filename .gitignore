@@ -1,0 +1,46 @@
+# Node dependencies and builds
+node_modules/
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+
+# Python artifacts and virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+
+# Infrastructure
+.aws-sam/
+
+# OS and IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Raw dataset files (privacy-first: do not commit raw data)
+data/**/*.csv
+data/**/*.json
+*.csv
+*.tsv
+*.parquet
+
+# JSON rules: ignore raw json data while preserving project config files
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+!tsconfig.*.json
+!components.json
