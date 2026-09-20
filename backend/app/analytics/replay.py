@@ -216,17 +216,23 @@ def analyze_session_journey(
             "step_index": step_idx + 1,
         }
 
+        meta = r_dict.get("metadata")
         exit_trigger = None
-        if "reason" in r_dict["metadata"]:
-            exit_trigger = str(r_dict["metadata"]["reason"])
-        elif "exit_trigger" in r_dict["metadata"]:
-            exit_trigger = str(r_dict["metadata"]["exit_trigger"])
+        if isinstance(meta, dict):
+            if "reason" in meta:
+                exit_trigger = str(meta["reason"])
+            elif "exit_trigger" in meta:
+                exit_trigger = str(meta["exit_trigger"])
+
+        stage_val = str(r_dict.get("stage", ""))
+        queue_val = str(r_dict.get("queue", ""))
+        event_type_val = str(r_dict.get("event_type", ""))
 
         ghost_point = GhostPointDetail(
-            stage=r_dict["stage"],
-            queue=r_dict["queue"],
+            stage=stage_val,
+            queue=queue_val,
             step_index=step_idx + 1,
-            event_type=r_dict["event_type"],
+            event_type=event_type_val,
             wait_duration_seconds=w_sec,
             time_to_abandonment_seconds=elapsed_sec,
             last_observed_state=last_state,
@@ -368,8 +374,8 @@ def replay_single_session_from_df(
     if not session_col or session_col not in df.columns:
         return None
 
-    matching = df[df[session_col].astype(str) == str(target_session_id)]
+    matching = df[df[session_col].astype(str) == target_session_id]
     if matching.empty:
         return None
 
-    return analyze_session_journey(str(target_session_id), matching, mapped_fields)
+    return analyze_session_journey(target_session_id, matching, mapped_fields)

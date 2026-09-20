@@ -90,7 +90,7 @@ async def preview_dataset(file: UploadFile = File(...)):
 
     return {
         "dataset_name": filename,
-        "rows": int(len(df)),
+        "rows": len(df),
         "columns": list(df.columns),
         "preview": df.head(5).where(pd.notnull(df), None).to_dict(orient="records"),
         "pii_warnings": pii_warnings,
