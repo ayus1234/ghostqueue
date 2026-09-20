@@ -116,7 +116,11 @@ class LLMInvestigatorProvider(AIProvider):
         context: Dict[str, Any],
     ) -> InvestigationReport:
         """Invoke Amazon Bedrock via boto3 using the EC2 instance IAM role."""
-        import boto3
+        try:
+            import boto3  # type: ignore[import-not-found, import-untyped]
+        except ImportError:
+            import importlib
+            boto3 = importlib.import_module("boto3")
 
         client = boto3.client("bedrock-runtime", region_name=self.aws_region)
 
