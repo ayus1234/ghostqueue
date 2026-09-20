@@ -13,10 +13,6 @@ import {
   Sliders,
   PlayCircle,
   ArrowRight,
-  Database,
-  Activity,
-  Layers,
-  HelpCircle,
 } from "lucide-react";
 import {
   checkHealth,
@@ -44,7 +40,7 @@ import { InvestigatorPanel } from "../components/InvestigatorPanel";
 import { SimulationWorkbench } from "../components/SimulationWorkbench";
 import { DatasetExplorer } from "../components/DatasetExplorer";
 import { UploadModal } from "../components/UploadModal";
-import { LoadingSkeleton, ErrorState, PrivacyBadge } from "../components/FeedbackStates";
+import { LoadingSkeleton, ErrorState } from "../components/FeedbackStates";
 
 export default function GhostQueueDashboard() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("overview");
@@ -78,6 +74,17 @@ export default function GhostQueueDashboard() {
       ? "RESEARCH-SCHEMA FIXTURE"
       : "SYNTHETIC REPLAY DEMO"
     : "CUSTOM UPLOAD";
+
+  const priorityZone = analysisData?.ghost_zones.reduce<DatasetAnalysisResponse["ghost_zones"][number] | null>(
+    (highest, zone) => {
+      if (!highest) return zone;
+      return zone.abandoned > highest.abandoned ||
+        (zone.abandoned === highest.abandoned && zone.ghost_rate > highest.ghost_rate)
+        ? zone
+        : highest;
+    },
+    null
+  );
 
   // 1. Initial Load: Health, Registry, and Default CC0 Benchmark
   const loadInitialData = useCallback(async () => {
@@ -245,27 +252,45 @@ export default function GhostQueueDashboard() {
 
       {/* VIEW: OVERVIEW DASHBOARD */}
       {activeTab === "overview" && !isLoadingAnalysis && analysisData && (
-        <div className="space-y-8">
-          {/* Hero Section */}
-          <div className="rounded-2xl border border-zinc-800/80 bg-gradient-to-r from-zinc-900/90 via-zinc-900/60 to-zinc-950 p-8 shadow-sm">
-            <div className="max-w-3xl space-y-3">
-              <div className="inline-flex items-center gap-2 rounded-full border border-rose-900/40 bg-rose-950/30 px-3 py-1 text-xs font-mono font-semibold text-rose-400">
+        <div className="space-y-7">
+          {/* Compact, action-led overview header */}
+          <section className="grid gap-5 border-b border-zinc-200 dark:border-zinc-800/80 pb-6 lg:grid-cols-[minmax(0,1fr)_19rem] lg:items-end">
+            <div className="max-w-3xl space-y-2.5">
+              <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold uppercase text-rose-600 dark:text-rose-400">
                 <Ghost className="h-3.5 w-3.5" />
                 Operational Intelligence
               </div>
-              <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                Where are your users disappearing?
-              </h2>
-              <p className="text-sm text-zinc-400 leading-relaxed">
-                Most operational systems measure who finished the queue. GhostQueue detects and diagnoses
-                the users who abandoned before service was completed, uncovering hidden friction points and
-                silent capacity losses.
+              <h1 className="text-3xl font-bold text-zinc-900 dark:text-white sm:text-4xl">
+                Queue abandonment overview
+              </h1>
+              <p className="max-w-2xl text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                See where customers leave before service, isolate the most consequential queue segments,
+                and move directly into the next best investigation.
               </p>
             </div>
-          </div>
 
-          {/* 6 Prominent KPI Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="border-t border-rose-200 dark:border-rose-900/50 pt-4 lg:border-t-0 lg:border-l lg:border-zinc-200 dark:lg:border-zinc-800 lg:pl-5 lg:pt-0">
+              <span className="text-xs font-medium uppercase text-zinc-500 dark:text-zinc-400">Current priority</span>
+              <div className="mt-2 flex items-start gap-2.5">
+                <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-rose-200 bg-rose-50 text-rose-600 dark:border-rose-500/25 dark:bg-rose-500/10 dark:text-rose-400">
+                  <Flame className="h-4 w-4" />
+                </div>
+                <div>
+                  <p className="font-mono text-lg font-bold text-rose-600 dark:text-rose-300">
+                    {analysisData.summary.ghost_rate != null
+                      ? `${analysisData.summary.ghost_rate.toFixed(2)}% ghost rate`
+                      : "Review abandonment patterns"}
+                  </p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
+                    Peak volume: {analysisData.summary.peak_abandonment_period || "not available"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Core queue health */}
+          <section aria-label="Queue health metrics" className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 sm:grid-cols-3 xl:grid-cols-6">
             <KpiCard
               label="Ghost Rate"
               value={analysisData.summary.ghost_rate}
@@ -327,7 +352,54 @@ export default function GhostQueueDashboard() {
               available={simulationResult?.baseline?.service_level_pct != null}
               unavailableReason="Service level threshold not in schema"
             />
-          </div>
+          </section>
+
+          {priorityZone && (
+            <section aria-labelledby="priority-brief-title" className="overflow-hidden rounded-xl border border-rose-200 bg-white shadow-xs dark:border-rose-900/40 dark:bg-zinc-900/70">
+              <div className="grid lg:grid-cols-[minmax(0,1fr)_auto] lg:items-stretch">
+                <div className="p-4 sm:p-5">
+                  <div className="flex items-center gap-2 text-xs font-mono font-semibold uppercase text-rose-600 dark:text-rose-400">
+                    <Flame className="h-3.5 w-3.5" />
+                    First action
+                  </div>
+                  <h2 id="priority-brief-title" className="mt-2 text-xl font-semibold text-zinc-900 dark:text-white">
+                    Review {priorityZone.zone_name}
+                  </h2>
+                  <p className="mt-1 max-w-2xl text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                    This zone has the largest abandonment volume in the active dataset, making it the highest-impact place to start.
+                  </p>
+
+                  <dl className="mt-4 grid grid-cols-3 gap-4 border-t border-zinc-100 dark:border-zinc-800 pt-4 text-sm">
+                    <div>
+                      <dt className="text-xs uppercase text-zinc-500 dark:text-zinc-400">Ghost rate</dt>
+                      <dd className="mt-1 font-mono text-lg font-bold text-rose-600 dark:text-rose-300">{priorityZone.ghost_rate.toFixed(2)}%</dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs uppercase text-zinc-500 dark:text-zinc-400">Ghosts</dt>
+                      <dd className="mt-1 font-mono text-lg font-bold text-zinc-900 dark:text-white">{priorityZone.abandoned.toLocaleString()}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs uppercase text-zinc-500 dark:text-zinc-400">Avg. wait</dt>
+                      <dd className="mt-1 font-mono text-lg font-bold text-zinc-900 dark:text-white">
+                        {priorityZone.avg_wait_time != null ? `${priorityZone.avg_wait_time.toFixed(0)}s` : "N/A"}
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+
+                <div className="flex items-center border-t border-zinc-100 bg-zinc-50/70 p-4 dark:border-zinc-800 dark:bg-zinc-950/40 lg:border-l lg:border-t-0">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("zones")}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition-colors hover:bg-rose-500 lg:w-auto"
+                  >
+                    Review ghost zone
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </section>
+          )}
 
           {/* Ghost Rate Breakdown Visualization */}
           <GhostRateChart summary={analysisData.summary} />
@@ -339,88 +411,99 @@ export default function GhostQueueDashboard() {
           <TimeSeriesChart timeAnalysis={analysisData.time_analysis} />
 
           {/* Operational Intelligence Launchpads */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-            {/* Launchpad: Ghost Replay */}
-            <div
-              onClick={() => {
-                if (analysisData.capabilities.ghost_replay) {
-                  setActiveTab("replay");
-                } else {
-                  handleSelectDataset("synthetic-replay-demo");
-                }
-              }}
-              className="group cursor-pointer rounded-xl border border-zinc-800 bg-zinc-900/60 p-5 hover:border-indigo-500/50 hover:bg-zinc-900 transition-all space-y-3"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                  <PlayCircle className="h-5 w-5" />
-                </div>
-                <ArrowRight className="h-4 w-4 text-zinc-400 group-hover:text-white transition-colors" />
-              </div>
+          <section aria-labelledby="next-workspace-title" className="border-t border-zinc-200 dark:border-zinc-800/80 pt-6">
+            <div className="mb-4 flex items-end justify-between gap-4">
               <div>
-                <h4 className="text-base font-semibold text-white">Ghost Replay</h4>
-                <p className="mt-1 text-xs text-zinc-400 leading-relaxed">
-                  Reconstruct chronological user journeys step by step to identify the exact second and
-                  stage where customers disappeared.
-                </p>
+                <h2 id="next-workspace-title" className="text-lg font-semibold text-zinc-900 dark:text-white">Continue investigating</h2>
+                <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">Move from the signal above into the workspace that answers the next question.</p>
               </div>
             </div>
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+              {/* Launchpad: Ghost Replay */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (analysisData.capabilities.ghost_replay) {
+                    setActiveTab("replay");
+                  } else {
+                    handleSelectDataset("synthetic-replay-demo");
+                  }
+                }}
+                className="group flex min-h-40 flex-col justify-between rounded-xl border border-zinc-200 bg-white p-5 text-left shadow-xs transition-all hover:border-indigo-400 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900/60 dark:hover:border-indigo-500/50 dark:hover:bg-zinc-900"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-indigo-200 bg-indigo-50 text-indigo-600 dark:border-indigo-500/20 dark:bg-indigo-500/10 dark:text-indigo-400">
+                    <PlayCircle className="h-5 w-5" />
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-zinc-400 transition-colors group-hover:text-zinc-900 dark:group-hover:text-white" />
+                </div>
+                <div>
+                  <h4 className="text-base font-semibold text-zinc-900 dark:text-white">Ghost Replay</h4>
+                  <p className="mt-1 text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
+                    Reconstruct chronological user journeys step by step to identify the exact second and
+                    stage where customers disappeared.
+                  </p>
+                </div>
+              </button>
 
-            {/* Launchpad: AI Investigator */}
-            <div
-              onClick={() => {
-                setActiveTab("investigator");
-                if (!investigationReport) handleRunInvestigation();
-              }}
-              className="group cursor-pointer rounded-xl border border-zinc-800 bg-zinc-900/60 p-5 hover:border-rose-500/50 hover:bg-zinc-900 transition-all space-y-3"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/20">
-                  <Sparkles className="h-5 w-5" />
+              {/* Launchpad: AI Investigator */}
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab("investigator");
+                  if (!investigationReport) handleRunInvestigation();
+                }}
+                className="group flex min-h-40 flex-col justify-between rounded-xl border border-zinc-200 bg-white p-5 text-left shadow-xs transition-all hover:border-rose-400 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900/60 dark:hover:border-rose-500/50 dark:hover:bg-zinc-900"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-rose-200 bg-rose-50 text-rose-600 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-400">
+                    <Sparkles className="h-5 w-5" />
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-zinc-400 transition-colors group-hover:text-zinc-900 dark:group-hover:text-white" />
                 </div>
-                <ArrowRight className="h-4 w-4 text-zinc-400 group-hover:text-white transition-colors" />
-              </div>
-              <div>
-                <h4 className="text-base font-semibold text-white">AI Investigator</h4>
-                <p className="mt-1 text-xs text-zinc-400 leading-relaxed">
-                  Ask why people are disappearing. Synthesize empirical evidence, hypotheses with confidence
-                  ratings, and concrete operational actions.
-                </p>
-              </div>
-            </div>
+                <div>
+                  <h4 className="text-base font-semibold text-zinc-900 dark:text-white">AI Investigator</h4>
+                  <p className="mt-1 text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
+                    Ask why people are disappearing. Synthesize empirical evidence, hypotheses with confidence
+                    ratings, and concrete operational actions.
+                  </p>
+                </div>
+              </button>
 
-            {/* Launchpad: What-If Simulator */}
-            <div
-              onClick={() => setActiveTab("simulator")}
-              className="group cursor-pointer rounded-xl border border-zinc-800 bg-zinc-900/60 p-5 hover:border-cyan-500/50 hover:bg-zinc-900 transition-all space-y-3"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-                  <Sliders className="h-5 w-5" />
+              {/* Launchpad: What-If Simulator */}
+              <button
+                type="button"
+                onClick={() => setActiveTab("simulator")}
+                className="group flex min-h-40 flex-col justify-between rounded-xl border border-zinc-200 bg-white p-5 text-left shadow-xs transition-all hover:border-cyan-400 hover:shadow-sm dark:border-zinc-800 dark:bg-zinc-900/60 dark:hover:border-cyan-500/50 dark:hover:bg-zinc-900"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-cyan-200 bg-cyan-50 text-cyan-600 dark:border-cyan-500/20 dark:bg-cyan-500/10 dark:text-cyan-400">
+                    <Sliders className="h-5 w-5" />
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-zinc-400 transition-colors group-hover:text-zinc-900 dark:group-hover:text-white" />
                 </div>
-                <ArrowRight className="h-4 w-4 text-zinc-400 group-hover:text-white transition-colors" />
-              </div>
-              <div>
-                <h4 className="text-base font-semibold text-white">What-If Simulator</h4>
-                <p className="mt-1 text-xs text-zinc-400 leading-relaxed">
-                  Simulate adjustments to staffing, arrival loads, and service times against empirical queue
-                  elasticity to forecast impact before deployment.
-                </p>
-              </div>
+                <div>
+                  <h4 className="text-base font-semibold text-zinc-900 dark:text-white">What-If Simulator</h4>
+                  <p className="mt-1 text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
+                    Simulate adjustments to staffing, arrival loads, and service times against empirical queue
+                    elasticity to forecast impact before deployment.
+                  </p>
+                </div>
+              </button>
             </div>
-          </div>
+          </section>
         </div>
       )}
 
       {/* VIEW: GHOST ZONES */}
       {activeTab === "zones" && analysisData && (
         <div className="space-y-6">
-          <div className="rounded-xl border border-zinc-800/80 bg-zinc-900/60 p-6 backdrop-blur-sm">
+          <div className="border-b border-zinc-200 dark:border-zinc-800/80 pb-5">
             <div className="flex items-center gap-2">
               <Flame className="h-5 w-5 text-rose-500" />
-              <h3 className="text-xl font-bold text-white">Ghost Zones Intelligence</h3>
+              <h3 className="text-xl font-bold text-zinc-900 dark:text-white">Ghost Zones Intelligence</h3>
             </div>
-            <p className="mt-1 text-xs text-zinc-400 max-w-2xl">
+            <p className="mt-1 max-w-2xl text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
               Ghost Zones rank queues, stages, and process steps by abandonment volume and ghost rate,
               applying automated severity classifications (High, Medium, Low) grounded in statistical drop-offs.
             </p>

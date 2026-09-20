@@ -1,10 +1,10 @@
 """Time-series abandonment and peak interval analysis."""
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 import pandas as pd
 from app.models.schemas import TimeAnalysisResult, TimePeriodAnalytics
 
 
-def extract_time_period(val: any) -> Optional[str]:
+def extract_time_period(val: Any) -> Optional[str]:
     """Extract a consistent time period string (e.g. '14:00', '2026-03-15 14:00', or date)."""
     if pd.isna(val):
         return None
@@ -157,7 +157,7 @@ def analyze_time_series(
 
     # Sort chronologically if possible
     try:
-        period_analytics.sort(key=lambda x: str(x.period))
+        period_analytics.sort(key=lambda x: x.period)
     except Exception:
         pass
 

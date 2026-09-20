@@ -6,12 +6,7 @@ import {
   Play,
   RotateCcw,
   Sparkles,
-  ArrowRight,
-  TrendingDown,
-  TrendingUp,
   AlertTriangle,
-  Info,
-  CheckCircle2,
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -127,16 +122,18 @@ export function SimulationWorkbench({
   return (
     <div className="space-y-6">
       {/* Simulator Header */}
-      <div className="rounded-xl border border-zinc-800/80 bg-zinc-900/60 p-6 backdrop-blur-sm shadow-sm">
+      <div className="rounded-xl border border-zinc-200/80 bg-white p-6 shadow-xs transition-colors dark:border-zinc-800/80 dark:bg-zinc-900/60">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-600/20 text-cyan-400 border border-cyan-500/30">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-50 text-cyan-600 border border-cyan-200 dark:bg-cyan-600/20 dark:text-cyan-400 dark:border-cyan-500/30">
                 <Sliders className="h-4 w-4" />
               </div>
-              <h3 className="text-xl font-bold text-white">What if we changed the queue?</h3>
+              <h3 className="text-xl font-bold text-zinc-900 dark:text-white">
+                What if we changed the queue?
+              </h3>
             </div>
-            <p className="mt-1 text-xs text-zinc-400 max-w-2xl">
+            <p className="mt-1 text-xs text-zinc-500 max-w-2xl dark:text-zinc-400">
               Model queue elasticity, staffing adjustments, and arrival demand fluctuations against empirical
               operational baselines to test operational interventions before executing in production.
             </p>
@@ -144,16 +141,18 @@ export function SimulationWorkbench({
 
           <div className="flex items-center gap-2">
             <button
+              type="button"
               onClick={() => handleApplyPreset("reset")}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-800/60 px-3 py-1.5 text-xs text-zinc-300 hover:bg-zinc-700 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs text-zinc-700 hover:bg-zinc-100 transition-colors dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-300 dark:hover:bg-zinc-700"
             >
               <RotateCcw className="h-3.5 w-3.5" />
               Reset Sliders
             </button>
             <button
+              type="button"
               onClick={() => triggerSimulation()}
               disabled={isLoading}
-              className="inline-flex items-center gap-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 px-5 py-2 text-xs font-semibold text-white shadow-lg shadow-cyan-900/20 transition-all disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl bg-cyan-600 hover:bg-cyan-700 px-5 py-2 text-xs font-semibold text-white shadow-xs transition-all disabled:opacity-50"
             >
               <Play className="h-3.5 w-3.5 fill-current" />
               {isLoading ? "Simulating..." : "Run Scenario"}
@@ -162,26 +161,29 @@ export function SimulationWorkbench({
         </div>
 
         {/* Quick Presets */}
-        <div className="mt-4 pt-4 border-t border-zinc-800 flex flex-wrap items-center gap-2">
-          <span className="text-xs text-zinc-400 flex items-center gap-1">
-            <Sparkles className="h-3.5 w-3.5 text-cyan-400" />
+        <div className="mt-4 pt-4 border-t border-zinc-200 flex flex-wrap items-center gap-2 dark:border-zinc-800">
+          <span className="text-xs text-zinc-500 flex items-center gap-1 dark:text-zinc-400">
+            <Sparkles className="h-3.5 w-3.5 text-cyan-600 dark:text-cyan-400" />
             Quick Scenarios:
           </span>
           <button
+            type="button"
             onClick={() => handleApplyPreset("staffing_15")}
-            className="rounded-md border border-cyan-800/50 bg-cyan-950/30 px-2.5 py-1 text-xs font-medium text-cyan-300 hover:bg-cyan-900/50 transition-colors"
+            className="rounded-md border border-cyan-200 bg-cyan-50 px-2.5 py-1 text-xs font-medium text-cyan-800 hover:bg-cyan-100 transition-colors dark:border-cyan-800/50 dark:bg-cyan-950/30 dark:text-cyan-300 dark:hover:bg-cyan-900/50"
           >
             +15% Staffing
           </button>
           <button
+            type="button"
             onClick={() => handleApplyPreset("demand_20")}
-            className="rounded-md border border-amber-800/50 bg-amber-950/30 px-2.5 py-1 text-xs font-medium text-amber-300 hover:bg-amber-900/50 transition-colors"
+            className="rounded-md border border-amber-200 bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-800 hover:bg-amber-100 transition-colors dark:border-amber-800/50 dark:bg-amber-950/30 dark:text-amber-300 dark:hover:bg-amber-900/50"
           >
             +20% Demand Surge
           </button>
           <button
+            type="button"
             onClick={() => handleApplyPreset("handle_time_neg15")}
-            className="rounded-md border border-emerald-800/50 bg-emerald-950/30 px-2.5 py-1 text-xs font-medium text-emerald-300 hover:bg-emerald-900/50 transition-colors"
+            className="rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-800 hover:bg-emerald-100 transition-colors dark:border-emerald-800/50 dark:bg-emerald-950/30 dark:text-emerald-300 dark:hover:bg-emerald-900/50"
           >
             -15% Handle Time
           </button>
@@ -191,29 +193,29 @@ export function SimulationWorkbench({
       {/* Simulator Controls & Metric Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Controls Panel */}
-        <div className="lg:col-span-5 rounded-xl border border-zinc-800/80 bg-zinc-900/60 p-6 space-y-5">
-          <h4 className="text-sm font-semibold uppercase tracking-wider text-zinc-400">
+        <div className="lg:col-span-5 rounded-xl border border-zinc-200/80 bg-white p-6 space-y-5 shadow-xs transition-colors dark:border-zinc-800/80 dark:bg-zinc-900/60">
+          <h4 className="text-sm font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
             Scenario Parameters
           </h4>
 
           {/* Scenario Name Input */}
           <div>
-            <label className="text-xs font-medium text-zinc-300 block mb-1">
+            <label className="text-xs font-medium text-zinc-700 block mb-1 dark:text-zinc-300">
               Scenario Name
             </label>
             <input
               type="text"
               value={scenarioName}
               onChange={(e) => setScenarioName(e.target.value)}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500 font-mono"
+              className="w-full rounded-lg border border-zinc-300 bg-zinc-50 px-3 py-1.5 text-xs text-zinc-900 focus:outline-none focus:border-cyan-500 font-mono dark:border-zinc-700 dark:bg-zinc-950 dark:text-white"
             />
           </div>
 
           {/* Staffing Change Slider */}
           <div className="space-y-1.5">
             <div className="flex justify-between text-xs">
-              <span className="text-zinc-300">Staffing Adjustment</span>
-              <span className="font-mono font-semibold text-cyan-400">
+              <span className="text-zinc-700 dark:text-zinc-300">Staffing Adjustment</span>
+              <span className="font-mono font-semibold text-cyan-600 dark:text-cyan-400">
                 {staffingPct > 0 ? `+${staffingPct}%` : `${staffingPct}%`}
               </span>
             </div>
@@ -224,7 +226,7 @@ export function SimulationWorkbench({
               step="5"
               value={staffingPct}
               onChange={(e) => setStaffingPct(Number(e.target.value))}
-              className="w-full accent-cyan-500 cursor-pointer"
+              className="w-full accent-cyan-600 cursor-pointer dark:accent-cyan-500"
             />
             <div className="flex justify-between text-[10px] text-zinc-400 font-mono">
               <span>-40%</span>
@@ -236,8 +238,8 @@ export function SimulationWorkbench({
           {/* Demand Change Slider */}
           <div className="space-y-1.5">
             <div className="flex justify-between text-xs">
-              <span className="text-zinc-300">Incoming Demand / Arrival Load</span>
-              <span className="font-mono font-semibold text-amber-400">
+              <span className="text-zinc-700 dark:text-zinc-300">Incoming Demand / Arrival Load</span>
+              <span className="font-mono font-semibold text-amber-600 dark:text-amber-400">
                 {demandPct > 0 ? `+${demandPct}%` : `${demandPct}%`}
               </span>
             </div>
@@ -248,7 +250,7 @@ export function SimulationWorkbench({
               step="5"
               value={demandPct}
               onChange={(e) => setDemandPct(Number(e.target.value))}
-              className="w-full accent-amber-500 cursor-pointer"
+              className="w-full accent-amber-600 cursor-pointer dark:accent-amber-500"
             />
             <div className="flex justify-between text-[10px] text-zinc-400 font-mono">
               <span>-40%</span>
@@ -260,8 +262,8 @@ export function SimulationWorkbench({
           {/* Service Time / AHT Slider */}
           <div className="space-y-1.5">
             <div className="flex justify-between text-xs">
-              <span className="text-zinc-300">Service Time (AHT) Adjustment</span>
-              <span className="font-mono font-semibold text-emerald-400">
+              <span className="text-zinc-700 dark:text-zinc-300">Service Time (AHT) Adjustment</span>
+              <span className="font-mono font-semibold text-emerald-600 dark:text-emerald-400">
                 {serviceTimePct > 0 ? `+${serviceTimePct}%` : `${serviceTimePct}%`}
               </span>
             </div>
@@ -272,7 +274,7 @@ export function SimulationWorkbench({
               step="5"
               value={serviceTimePct}
               onChange={(e) => setServiceTimePct(Number(e.target.value))}
-              className="w-full accent-emerald-500 cursor-pointer"
+              className="w-full accent-emerald-600 cursor-pointer dark:accent-emerald-500"
             />
             <div className="flex justify-between text-[10px] text-zinc-400 font-mono">
               <span>-30% (Faster)</span>
@@ -282,22 +284,23 @@ export function SimulationWorkbench({
           </div>
 
           {/* Additional Agents Direct Input */}
-          <div className="pt-2 border-t border-zinc-800 flex items-center justify-between">
-            <span className="text-xs text-zinc-300">Direct Additional Agents</span>
+          <div className="pt-2 border-t border-zinc-200 flex items-center justify-between dark:border-zinc-800">
+            <span className="text-xs text-zinc-700 dark:text-zinc-300">Direct Additional Agents</span>
             <input
               type="number"
               min="0"
               max="100"
               value={additionalAgents}
               onChange={(e) => setAdditionalAgents(Math.max(0, Number(e.target.value)))}
-              className="w-20 rounded-lg border border-zinc-700 bg-zinc-950 px-2.5 py-1 text-xs text-white text-right font-mono focus:outline-none focus:border-cyan-500"
+              className="w-20 rounded-lg border border-zinc-300 bg-zinc-50 px-2.5 py-1 text-xs text-zinc-900 text-right font-mono focus:outline-none focus:border-cyan-500 dark:border-zinc-700 dark:bg-zinc-950 dark:text-white"
             />
           </div>
 
           <button
+            type="button"
             onClick={() => triggerSimulation()}
             disabled={isLoading}
-            className="w-full rounded-lg bg-cyan-600 hover:bg-cyan-500 py-2.5 text-xs font-semibold text-white transition-colors"
+            className="w-full rounded-lg bg-cyan-600 hover:bg-cyan-700 py-2.5 text-xs font-semibold text-white transition-colors shadow-xs"
           >
             Apply Scenario Adjustments
           </button>
@@ -313,23 +316,25 @@ export function SimulationWorkbench({
               {/* Baseline vs Scenario Metric Cards */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                 {/* Ghost Rate Card */}
-                <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3.5">
-                  <span className="text-[10px] font-mono uppercase text-zinc-400">
+                <div className="rounded-xl border border-zinc-200/80 bg-white p-3.5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/60">
+                  <span className="text-[10px] font-mono uppercase text-zinc-500 dark:text-zinc-400">
                     Ghost Rate
                   </span>
                   <div className="mt-1 flex items-baseline gap-1.5">
-                    <span className="text-xl font-bold font-mono text-white">
+                    <span className="text-xl font-bold font-mono text-zinc-900 dark:text-white">
                       {currentResult.simulated.ghost_rate.toFixed(2)}%
                     </span>
                   </div>
                   <div className="mt-1.5 flex items-center gap-1 font-mono text-[11px]">
-                    <span className="text-zinc-400">Base: {currentResult.baseline.ghost_rate.toFixed(2)}%</span>
+                    <span className="text-zinc-500 dark:text-zinc-400">
+                      Base: {currentResult.baseline.ghost_rate.toFixed(2)}%
+                    </span>
                     {currentResult.deltas.ghost_rate_delta !== 0 && (
                       <span
                         className={`font-semibold ${
                           currentResult.deltas.ghost_rate_delta < 0
-                            ? "text-emerald-400"
-                            : "text-rose-400"
+                            ? "text-emerald-600 dark:text-emerald-400"
+                            : "text-rose-600 dark:text-rose-400"
                         }`}
                       >
                         ({currentResult.deltas.ghost_rate_delta > 0 ? "+" : ""}
@@ -340,76 +345,78 @@ export function SimulationWorkbench({
                 </div>
 
                 {/* Abandoned Volume Card */}
-                <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3.5">
-                  <span className="text-[10px] font-mono uppercase text-zinc-400">
+                <div className="rounded-xl border border-zinc-200/80 bg-white p-3.5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/60">
+                  <span className="text-[10px] font-mono uppercase text-zinc-500 dark:text-zinc-400">
                     Abandoned Volume
                   </span>
                   <div className="mt-1 flex items-baseline gap-1.5">
-                    <span className="text-xl font-bold font-mono text-rose-400">
+                    <span className="text-xl font-bold font-mono text-rose-600 dark:text-rose-400">
                       {currentResult.simulated.abandoned_volume.toLocaleString()}
                     </span>
                   </div>
                   <div className="mt-1.5 flex items-center gap-1 font-mono text-[11px]">
-                    <span className="text-zinc-400">Base: {currentResult.baseline.abandoned_volume.toLocaleString()}</span>
+                    <span className="text-zinc-500 dark:text-zinc-400">
+                      Base: {currentResult.baseline.abandoned_volume.toLocaleString()}
+                    </span>
                   </div>
                 </div>
 
                 {/* Avg Wait Card */}
-                <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3.5">
-                  <span className="text-[10px] font-mono uppercase text-zinc-400">
+                <div className="rounded-xl border border-zinc-200/80 bg-white p-3.5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/60">
+                  <span className="text-[10px] font-mono uppercase text-zinc-500 dark:text-zinc-400">
                     Avg Wait Time
                   </span>
                   <div className="mt-1 flex items-baseline gap-1.5">
-                    <span className="text-xl font-bold font-mono text-white">
+                    <span className="text-xl font-bold font-mono text-zinc-900 dark:text-white">
                       {currentResult.simulated.avg_wait_seconds != null
                         ? `${currentResult.simulated.avg_wait_seconds.toFixed(0)}s`
                         : "—"}
                     </span>
                   </div>
-                  <div className="mt-1.5 text-[11px] font-mono text-zinc-400">
+                  <div className="mt-1.5 text-[11px] font-mono text-zinc-500 dark:text-zinc-400">
                     Base: {currentResult.baseline.avg_wait_seconds != null ? `${currentResult.baseline.avg_wait_seconds.toFixed(0)}s` : "—"}
                   </div>
                 </div>
 
                 {/* Service Level Card */}
-                <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-3.5">
-                  <span className="text-[10px] font-mono uppercase text-zinc-400">
+                <div className="rounded-xl border border-zinc-200/80 bg-white p-3.5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/60">
+                  <span className="text-[10px] font-mono uppercase text-zinc-500 dark:text-zinc-400">
                     Service Level
                   </span>
                   <div className="mt-1 flex items-baseline gap-1.5">
-                    <span className="text-xl font-bold font-mono text-emerald-400">
+                    <span className="text-xl font-bold font-mono text-emerald-600 dark:text-emerald-400">
                       {currentResult.simulated.service_level_pct != null
                         ? `${currentResult.simulated.service_level_pct.toFixed(1)}%`
                         : "—"}
                     </span>
                   </div>
-                  <div className="mt-1.5 text-[11px] font-mono text-zinc-400">
+                  <div className="mt-1.5 text-[11px] font-mono text-zinc-500 dark:text-zinc-400">
                     Base: {currentResult.baseline.service_level_pct != null ? `${currentResult.baseline.service_level_pct.toFixed(1)}%` : "—"}
                   </div>
                 </div>
               </div>
 
               {/* Recharts Comparison Chart */}
-              <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-                <h5 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-3">
+              <div className="rounded-xl border border-zinc-200/80 bg-white p-5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/60">
+                <h5 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-3 dark:text-zinc-400">
                   Baseline vs Scenario Comparison
                 </h5>
                 <div className="h-56 w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" className="dark:stroke-zinc-800" vertical={false} />
                       <XAxis dataKey="metric" stroke="#71717a" fontSize={11} tickLine={false} />
                       <YAxis stroke="#71717a" fontSize={11} tickLine={false} axisLine={false} />
                       <Tooltip
                         content={({ active, payload, label }) => {
                           if (active && payload && payload.length) {
                             return (
-                              <div className="rounded-lg border border-zinc-800 bg-zinc-950 p-2.5 text-xs shadow-lg">
-                                <div className="font-semibold text-white mb-1">{label}</div>
+                              <div className="rounded-lg border border-zinc-200 bg-white p-2.5 text-xs shadow-lg dark:border-zinc-800 dark:bg-zinc-950">
+                                <div className="font-semibold text-zinc-900 mb-1 dark:text-white">{label}</div>
                                 {payload.map((p, i) => (
                                   <div key={i} className="flex justify-between gap-3 font-mono">
-                                    <span className="text-zinc-400">{p.name}:</span>
-                                    <span className="font-bold text-white">{p.value}</span>
+                                    <span className="text-zinc-500 dark:text-zinc-400">{p.name}:</span>
+                                    <span className="font-bold text-zinc-900 dark:text-white">{p.value}</span>
                                   </div>
                                 ))}
                               </div>
@@ -419,7 +426,7 @@ export function SimulationWorkbench({
                         }}
                       />
                       <Legend wrapperStyle={{ fontSize: "11px" }} />
-                      <Bar dataKey="Baseline" fill="#52525b" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="Baseline" fill="#94a3b8" radius={[4, 4, 0, 0]} />
                       <Bar dataKey="Simulated" fill="#06b6d4" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
@@ -427,11 +434,11 @@ export function SimulationWorkbench({
               </div>
 
               {/* Explicit Assumptions Callout */}
-              <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/60 p-4 text-xs">
-                <span className="font-semibold text-zinc-300 block mb-1">
+              <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4 text-xs dark:border-zinc-800/80 dark:bg-zinc-950/60">
+                <span className="font-semibold text-zinc-800 block mb-1 dark:text-zinc-300">
                   Modeled Assumptions & Mathematical Elasticity:
                 </span>
-                <ul className="list-disc pl-4 space-y-1 text-zinc-400 font-mono text-[11px]">
+                <ul className="list-disc pl-4 space-y-1 text-zinc-600 font-mono text-[11px] dark:text-zinc-400">
                   {currentResult.assumptions.map((assump, idx) => (
                     <li key={idx}>{assump}</li>
                   ))}
@@ -442,17 +449,17 @@ export function SimulationWorkbench({
         </div>
       </div>
 
-      {/* MANDATORY PROMINENT DISCLAIMER (Visible, not in a tooltip) */}
-      <div className="rounded-xl border border-amber-900/50 bg-amber-950/20 p-4">
+      {/* MANDATORY PROMINENT DISCLAIMER */}
+      <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-900/50 dark:bg-amber-950/20">
         <div className="flex items-start gap-3">
-          <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
+          <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
           <div>
-            <h5 className="text-xs font-bold uppercase tracking-wider text-amber-300">
+            <h5 className="text-xs font-bold uppercase tracking-wider text-amber-900 dark:text-amber-300">
               Mandatory Scientific & Simulation Disclaimer
             </h5>
-            <p className="mt-1 text-xs text-amber-200/90 leading-relaxed font-sans">
+            <p className="mt-1 text-xs text-amber-800/90 leading-relaxed font-sans dark:text-amber-200/90">
               This is a scenario simulation based on observed dataset relationships and stated mathematical
-              assumptions (such as Erlang non-linear queue elasticity <code className="font-mono text-amber-300">W_sim = W_0 × L^1.4</code> and abandonment sensitivity <code className="font-mono text-amber-300">G_sim = G_0 × (W_sim/W_0)^0.85</code>).
+              assumptions (such as Erlang non-linear queue elasticity <code className="font-mono text-amber-900 dark:text-amber-300">W_sim = W_0 × L^1.4</code> and abandonment sensitivity <code className="font-mono text-amber-900 dark:text-amber-300">G_sim = G_0 × (W_sim/W_0)^0.85</code>).
               It is an operational planning model and is <strong>not a prediction or guarantee of future real-world outcomes</strong>.
             </p>
           </div>

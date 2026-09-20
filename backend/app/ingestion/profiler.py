@@ -29,7 +29,7 @@ def evaluate_capabilities(
         core_analytics = False
 
     # Ghost zones requires a grouping dimension and abandonment data
-    ghost_zones = bool(has_queue and core_analytics)
+    ghost_zones = has_queue and core_analytics
 
     # Ghost Replay strictly requires event/session level logs with multiple steps or events
     # Never claim replay is available for aggregate records
@@ -82,8 +82,8 @@ def create_dataset_profile(
     return DatasetProfile(
         dataset_name=dataset_name,
         format=file_format.lower(),
-        row_count=int(len(df)),
-        column_count=int(len(original_cols)),
+        row_count=len(df),
+        column_count=len(original_cols),
         original_columns=original_cols,
         normalized_columns=normalized_cols,
         mapped_fields=mapped_fields,
