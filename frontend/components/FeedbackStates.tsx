@@ -27,11 +27,11 @@ export function LoadingSkeleton({
 export function ErrorState({
   title = "An error occurred",
   message,
-  onRetry,
+  onRetryAction,
 }: {
   title?: string;
   message: string;
-  onRetry?: () => void;
+  onRetryAction?: () => void;
 }) {
   return (
     <div className="rounded-xl border border-rose-900/40 bg-rose-950/20 p-6 text-center text-rose-200">
@@ -40,9 +40,9 @@ export function ErrorState({
       </div>
       <h3 className="text-base font-semibold text-rose-300">{title}</h3>
       <p className="mt-1 text-sm text-rose-300/80 max-w-md mx-auto">{message}</p>
-      {onRetry && (
+      {onRetryAction && (
         <button
-          onClick={onRetry}
+          onClick={onRetryAction}
           className="mt-4 inline-flex items-center gap-2 rounded-lg bg-rose-900/50 hover:bg-rose-900/80 px-4 py-2 text-xs font-medium text-rose-100 transition-colors"
         >
           <RefreshCw className="h-3.5 w-3.5" />

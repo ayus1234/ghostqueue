@@ -306,7 +306,7 @@ export function SimulationWorkbench({
         {/* Comparison Metrics & Chart */}
         <div className="lg:col-span-7 space-y-4">
           {isLoading && <LoadingSkeleton lines={6} />}
-          {error && <ErrorState message={error} onRetry={() => triggerSimulation()} />}
+          {error && <ErrorState message={error} onRetryAction={() => triggerSimulation()} />}
 
           {currentResult && !isLoading && (
             <div className="space-y-4">

@@ -236,7 +236,7 @@ export default function GhostQueueDashboard() {
         <ErrorState
           title="Data Engine Communication Error"
           message={analysisError}
-          onRetry={() => handleSelectDataset(activeDatasetId)}
+          onRetryAction={() => handleSelectDataset(activeDatasetId)}
         />
       )}
 

@@ -99,7 +99,7 @@ export function InvestigatorPanel({
       </div>
 
       {isLoading && <LoadingSkeleton lines={6} />}
-      {error && <ErrorState message={error} onRetry={onRunInvestigation} />}
+      {error && <ErrorState message={error} onRetryAction={onRunInvestigation} />}
 
       {report && !isLoading && (
         <div className="space-y-6">
