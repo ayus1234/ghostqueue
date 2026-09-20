@@ -1,0 +1,450 @@
+[
+  {
+    "session_id": "SES-COMP-101",
+    "event_id": "EVT-101-1",
+    "timestamp": "2024-03-01 10:00:00",
+    "event_type": "session_enter",
+    "queue": "Customer Care",
+    "stage": "IVR_Menu",
+    "status": "in_progress",
+    "wait_duration": 0,
+    "actor": "customer",
+    "metadata": {
+      "device": "mobile"
+    }
+  },
+  {
+    "session_id": "SES-COMP-101",
+    "event_id": "EVT-101-2",
+    "timestamp": "2024-03-01 10:01:15",
+    "event_type": "queue_joined",
+    "queue": "Customer Care",
+    "stage": "Waiting_Room",
+    "status": "queued",
+    "wait_duration": 75,
+    "actor": "system",
+    "metadata": {
+      "priority": "normal"
+    }
+  },
+  {
+    "session_id": "SES-COMP-101",
+    "event_id": "EVT-101-3",
+    "timestamp": "2024-03-01 10:03:30",
+    "event_type": "agent_connected",
+    "queue": "Customer Care",
+    "stage": "In_Service",
+    "status": "connected",
+    "wait_duration": 210,
+    "actor": "agent_42",
+    "metadata": {
+      "agent_name": "Sarah"
+    }
+  },
+  {
+    "session_id": "SES-COMP-101",
+    "event_id": "EVT-101-4",
+    "timestamp": "2024-03-01 10:08:45",
+    "event_type": "service_completed",
+    "queue": "Customer Care",
+    "stage": "Resolution",
+    "status": "completed",
+    "wait_duration": 0,
+    "actor": "agent_42",
+    "metadata": {
+      "resolution": "solved"
+    }
+  },
+  {
+    "session_id": "SES-COMP-102",
+    "event_id": "EVT-102-1",
+    "timestamp": "2024-03-01 10:15:00",
+    "event_type": "session_enter",
+    "queue": "Billing",
+    "stage": "Self_Service",
+    "status": "in_progress",
+    "wait_duration": 0,
+    "actor": "customer",
+    "metadata": {
+      "channel": "web"
+    }
+  },
+  {
+    "session_id": "SES-COMP-102",
+    "event_id": "EVT-102-2",
+    "timestamp": "2024-03-01 10:16:20",
+    "event_type": "payment_submitted",
+    "queue": "Billing",
+    "stage": "Payment_Processing",
+    "status": "processing",
+    "wait_duration": 80,
+    "actor": "customer",
+    "metadata": {
+      "amount": 120
+    }
+  },
+  {
+    "session_id": "SES-COMP-102",
+    "event_id": "EVT-102-3",
+    "timestamp": "2024-03-01 10:17:00",
+    "event_type": "transaction_success",
+    "queue": "Billing",
+    "stage": "Receipt",
+    "status": "completed",
+    "wait_duration": 40,
+    "actor": "system",
+    "metadata": {
+      "auth_code": "OK992"
+    }
+  },
+  {
+    "session_id": "SES-ABAN-201",
+    "event_id": "EVT-201-1",
+    "timestamp": "2024-03-01 11:00:00",
+    "event_type": "session_enter",
+    "queue": "Support",
+    "stage": "IVR_Menu",
+    "status": "in_progress",
+    "wait_duration": 0,
+    "actor": "customer",
+    "metadata": {
+      "device": "phone"
+    }
+  },
+  {
+    "session_id": "SES-ABAN-201",
+    "event_id": "EVT-201-2",
+    "timestamp": "2024-03-01 11:00:45",
+    "event_type": "queue_joined",
+    "queue": "Support",
+    "stage": "Waiting_Room",
+    "status": "queued",
+    "wait_duration": 45,
+    "actor": "system",
+    "metadata": {
+      "queue_pos": 8
+    }
+  },
+  {
+    "session_id": "SES-ABAN-201",
+    "event_id": "EVT-201-3",
+    "timestamp": "2024-03-01 11:04:15",
+    "event_type": "user_abandoned",
+    "queue": "Support",
+    "stage": "Waiting_Room",
+    "status": "abandoned",
+    "wait_duration": 210,
+    "actor": "customer",
+    "metadata": {
+      "reason": "caller_hangup"
+    }
+  },
+  {
+    "session_id": "SES-ABAN-202",
+    "event_id": "EVT-202-1",
+    "timestamp": "2024-03-01 11:20:00",
+    "event_type": "session_enter",
+    "queue": "Onboarding",
+    "stage": "Profile_Setup",
+    "status": "in_progress",
+    "wait_duration": 0,
+    "actor": "customer",
+    "metadata": {
+      "platform": "ios"
+    }
+  },
+  {
+    "session_id": "SES-ABAN-202",
+    "event_id": "EVT-202-2",
+    "timestamp": "2024-03-01 11:21:30",
+    "event_type": "document_prompt",
+    "queue": "Onboarding",
+    "stage": "KYC_Verification",
+    "status": "waiting_input",
+    "wait_duration": 90,
+    "actor": "system",
+    "metadata": {
+      "step": "id_upload"
+    }
+  },
+  {
+    "session_id": "SES-ABAN-202",
+    "event_id": "EVT-202-3",
+    "timestamp": "2024-03-01 11:24:00",
+    "event_type": "session_timeout_abandon",
+    "queue": "Onboarding",
+    "stage": "KYC_Verification",
+    "status": "abandoned",
+    "wait_duration": 150,
+    "actor": "customer",
+    "metadata": {
+      "reason": "document_timeout"
+    }
+  },
+  {
+    "session_id": "SES-UNRES-301",
+    "event_id": "EVT-301-1",
+    "timestamp": "2024-03-01 11:30:00",
+    "event_type": "session_enter",
+    "queue": "Triage",
+    "stage": "Symptom_Check",
+    "status": "in_progress",
+    "wait_duration": 0,
+    "actor": "customer",
+    "metadata": {
+      "triage_level": 3
+    }
+  },
+  {
+    "session_id": "SES-UNRES-301",
+    "event_id": "EVT-301-2",
+    "timestamp": "2024-03-01 11:32:10",
+    "event_type": "queue_joined",
+    "queue": "Triage",
+    "stage": "Nurse_Queue",
+    "status": "queued",
+    "wait_duration": 130,
+    "actor": "system",
+    "metadata": {
+      "queue_pos": 2
+    }
+  },
+  {
+    "session_id": "SES-UNRES-302",
+    "event_id": "EVT-302-1",
+    "timestamp": "2024-03-01 12:00:00",
+    "event_type": "session_enter",
+    "queue": "Claims",
+    "stage": "Initial_Filing",
+    "status": "in_progress",
+    "wait_duration": 0,
+    "actor": "customer",
+    "metadata": {
+      "claim_type": "property"
+    }
+  },
+  {
+    "session_id": "SES-UNRES-302",
+    "event_id": "EVT-302-2",
+    "timestamp": "2024-03-01 12:03:00",
+    "event_type": "evidence_uploaded",
+    "queue": "Claims",
+    "stage": "Document_Review",
+    "status": "pending_review",
+    "wait_duration": 180,
+    "actor": "customer",
+    "metadata": {
+      "files_count": 3
+    }
+  },
+  {
+    "session_id": "SES-UNRES-302",
+    "event_id": "EVT-302-3",
+    "timestamp": "2024-03-01 12:10:00",
+    "event_type": "escalation_triggered",
+    "queue": "Specialist_Claims",
+    "stage": "Senior_Review",
+    "status": "queued",
+    "wait_duration": 420,
+    "actor": "system",
+    "metadata": {
+      "tier": 2
+    }
+  },
+  {
+    "session_id": "SES-MULTI-401",
+    "event_id": "EVT-401-1",
+    "timestamp": "2024-03-01 13:00:00",
+    "event_type": "session_enter",
+    "queue": "Front_Desk",
+    "stage": "Check_In",
+    "status": "in_progress",
+    "wait_duration": 0,
+    "actor": "customer",
+    "metadata": {
+      "check_in_mode": "kiosk"
+    }
+  },
+  {
+    "session_id": "SES-MULTI-401",
+    "event_id": "EVT-401-2",
+    "timestamp": "2024-03-01 13:02:30",
+    "event_type": "transferred",
+    "queue": "Triage",
+    "stage": "Pre_Assessment",
+    "status": "in_progress",
+    "wait_duration": 150,
+    "actor": "front_agent",
+    "metadata": {
+      "room": "A-12"
+    }
+  },
+  {
+    "session_id": "SES-MULTI-401",
+    "event_id": "EVT-401-3",
+    "timestamp": "2024-03-01 13:06:00",
+    "event_type": "escalated_specialist",
+    "queue": "Specialty_Care",
+    "stage": "Doctor_Queue",
+    "status": "queued",
+    "wait_duration": 210,
+    "actor": "nurse_1",
+    "metadata": {
+      "specialty": "Cardiology"
+    }
+  },
+  {
+    "session_id": "SES-MULTI-401",
+    "event_id": "EVT-401-4",
+    "timestamp": "2024-03-01 13:12:00",
+    "event_type": "doctor_connected",
+    "queue": "Specialty_Care",
+    "stage": "Consultation",
+    "status": "connected",
+    "wait_duration": 360,
+    "actor": "dr_smith",
+    "metadata": {
+      "room": "Exam-3"
+    }
+  },
+  {
+    "session_id": "SES-MULTI-401",
+    "event_id": "EVT-401-5",
+    "timestamp": "2024-03-01 13:25:00",
+    "event_type": "discharge_completed",
+    "queue": "Specialty_Care",
+    "stage": "Discharge",
+    "status": "completed",
+    "wait_duration": 0,
+    "actor": "dr_smith",
+    "metadata": {
+      "follow_up_days": 14
+    }
+  },
+  {
+    "session_id": "SES-MULTI-402",
+    "event_id": "EVT-402-1",
+    "timestamp": "2024-03-01 13:30:00",
+    "event_type": "session_enter",
+    "queue": "Front_Desk",
+    "stage": "Check_In",
+    "status": "in_progress",
+    "wait_duration": 0,
+    "actor": "customer",
+    "metadata": {
+      "kiosk": 2
+    }
+  },
+  {
+    "session_id": "SES-MULTI-402",
+    "event_id": "EVT-402-2",
+    "timestamp": "2024-03-01 13:31:45",
+    "event_type": "routed_billing",
+    "queue": "Billing_Exceptions",
+    "stage": "Exception_Queue",
+    "status": "queued",
+    "wait_duration": 105,
+    "actor": "system",
+    "metadata": {
+      "discrepancy": "copay"
+    }
+  },
+  {
+    "session_id": "SES-MULTI-402",
+    "event_id": "EVT-402-3",
+    "timestamp": "2024-03-01 13:38:00",
+    "event_type": "caller_hangup",
+    "queue": "Billing_Exceptions",
+    "stage": "Exception_Queue",
+    "status": "abandoned",
+    "wait_duration": 375,
+    "actor": "customer",
+    "metadata": {
+      "exit_trigger": "patience_limit"
+    }
+  },
+  {
+    "session_id": "SES-LONG-501",
+    "event_id": "EVT-501-1",
+    "timestamp": "2024-03-01 14:00:00",
+    "event_type": "session_enter",
+    "queue": "Tech_Support",
+    "stage": "Tier1_Triage",
+    "status": "in_progress",
+    "wait_duration": 0,
+    "actor": "customer",
+    "metadata": {
+      "severity": "sev-3"
+    }
+  },
+  {
+    "session_id": "SES-LONG-501",
+    "event_id": "EVT-501-2",
+    "timestamp": "2024-03-01 14:02:00",
+    "event_type": "queue_joined",
+    "queue": "Tech_Support",
+    "stage": "Hold_Queue",
+    "status": "queued",
+    "wait_duration": 120,
+    "actor": "system",
+    "metadata": {
+      "est_wait_min": 25
+    }
+  },
+  {
+    "session_id": "SES-LONG-501",
+    "event_id": "EVT-501-3",
+    "timestamp": "2024-03-01 14:24:00",
+    "event_type": "user_gave_up_abandon",
+    "queue": "Tech_Support",
+    "stage": "Hold_Queue",
+    "status": "abandoned",
+    "wait_duration": 1320,
+    "actor": "customer",
+    "metadata": {
+      "reason": "hold_too_long"
+    }
+  },
+  {
+    "session_id": "SES-COMP-103",
+    "event_id": "EVT-103-1",
+    "timestamp": "2024-03-01 15:00:00",
+    "event_type": "session_enter",
+    "queue": "Customer Care",
+    "stage": "IVR_Menu",
+    "status": "in_progress",
+    "wait_duration": 0,
+    "actor": "customer",
+    "metadata": {
+      "device": "landline"
+    }
+  },
+  {
+    "session_id": "SES-COMP-103",
+    "event_id": "EVT-103-2",
+    "timestamp": "2024-03-01 15:01:30",
+    "event_type": "agent_connected",
+    "queue": "Customer Care",
+    "stage": "In_Service",
+    "status": "connected",
+    "wait_duration": 90,
+    "actor": "agent_12",
+    "metadata": {
+      "queue_time": 90
+    }
+  },
+  {
+    "session_id": "SES-COMP-103",
+    "event_id": "EVT-103-3",
+    "timestamp": "2024-03-01 15:05:00",
+    "event_type": "call_resolved",
+    "queue": "Customer Care",
+    "stage": "Resolution",
+    "status": "completed",
+    "wait_duration": 0,
+    "actor": "agent_12",
+    "metadata": {
+      "notes": "updated address"
+    }
+  }
+]

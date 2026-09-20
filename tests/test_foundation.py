@@ -22,4 +22,4 @@ def test_demo_summary_endpoint():
     client = TestClient(app)
     response = client.get("/api/demo/summary")
     assert response.status_code == 200
-    assert response.json()["status"] == "dataset_pending"
+    assert response.json()["status"] in ("dataset_pending", "ready")

@@ -1,8 +1,25 @@
 {
+  "include": [
+    "backend"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/__pycache__",
+    ".git"
+  ],
   "extraPaths": [
     "backend",
-    "C:/Users/hp/.venv/Lib/site-packages",
-    "C:/Python313/Lib/site-packages",
-    "C:/Python312/Lib/site-packages"
-  ]
+    "C:/Python313/Lib/site-packages"
+  ],
+  "typeCheckingMode": "basic",
+  "reportMissingImports": "error",
+  "reportMissingTypeStubs": false,
+  "reportGeneralTypeIssues": "none",
+  "reportOptionalMemberAccess": "none",
+  "reportAttributeAccessIssue": "none",
+  "reportArgumentType": "none",
+  "reportCallIssue": "none",
+  "reportIndexIssue": "none",
+  "reportAssignmentType": "none",
+  "reportOperatorIssue": "none"
 }

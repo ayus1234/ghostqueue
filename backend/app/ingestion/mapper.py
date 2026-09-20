@@ -39,23 +39,29 @@ CANONICAL_ALIASES: Dict[str, List[str]] = {
         "ghost",
     ],
     "wait_time": [
-        "wait",
         "wait_time",
-        "average_wait",
-        "avg_wait",
+        "asa_sec",
         "asa",
         "average_speed_of_answer",
+        "queue_duration_sec",
+        "queue_duration",
+        "average_wait",
+        "avg_wait",
+        "avg_wait_sec",
         "queue_time",
         "hold_time",
         "waiting_time",
         "delay_seconds",
         "wait_seconds",
+        "wait_duration",
+        "wait",
     ],
     "queue": [
         "queue",
         "queue_name",
-        "skill",
+        "queue_id",
         "skill_group",
+        "skill",
         "department",
         "service",
         "line",
@@ -65,20 +71,24 @@ CANONICAL_ALIASES: Dict[str, List[str]] = {
     "timestamp": [
         "timestamp",
         "datetime",
+        "interval_start",
+        "interval_time",
+        "start_time",
+        "call_datetime",
+        "call_date",
         "date",
         "time",
-        "interval",
-        "start_time",
-        "call_time",
         "created_at",
         "event_time",
         "arrival_time",
+        "interval",
     ],
     "session_id": [
         "session_id",
+        "contact_id",
+        "contact_identifier",
         "interaction_id",
         "call_id",
-        "contact_id",
         "ticket_id",
         "customer_id",
         "id",
@@ -86,21 +96,23 @@ CANONICAL_ALIASES: Dict[str, List[str]] = {
     "event_type": [
         "event",
         "event_type",
+        "outcome",
         "action",
         "status",
         "disposition",
-        "outcome",
         "step",
     ],
     "service_time": [
+        "aht_sec",
+        "aht",
         "service_time",
         "handle_time",
         "duration",
         "talk_time",
-        "aht",
         "call_duration",
     ],
     "agents_available": [
+        "agents_staffed",
         "staffing",
         "agents",
         "agents_available",
@@ -135,16 +147,16 @@ def map_columns(
 
     normalized_map = {col: normalize_column_name(col) for col in raw_columns}
 
-    # Pass 1: Exact matches and alias matches
+    # Pass 1: Exact matches and alias matches in priority order
     for canonical_field, aliases in CANONICAL_ALIASES.items():
         if canonical_field in canonical_to_source:
             continue
 
+        # Check exact match with canonical field name first
+        matched = False
         for col, norm in normalized_map.items():
             if col in used_columns:
                 continue
-
-            # Exact match with canonical field name
             if norm == canonical_field:
                 canonical_to_source[canonical_field] = col
                 used_columns.add(col)
@@ -156,20 +168,30 @@ def map_columns(
                         match_type="exact",
                     )
                 )
+                matched = True
                 break
+        if matched:
+            continue
 
-            # Exact match with known alias
-            if norm in aliases:
-                canonical_to_source[canonical_field] = col
-                used_columns.add(col)
-                mapping_details.append(
-                    FieldMappingDetail(
-                        canonical_field=canonical_field,
-                        source_column=col,
-                        confidence=0.95,
-                        match_type="alias",
+        # Check aliases in defined priority order
+        for alias in aliases:
+            for col, norm in normalized_map.items():
+                if col in used_columns:
+                    continue
+                if norm == alias:
+                    canonical_to_source[canonical_field] = col
+                    used_columns.add(col)
+                    mapping_details.append(
+                        FieldMappingDetail(
+                            canonical_field=canonical_field,
+                            source_column=col,
+                            confidence=0.95,
+                            match_type="alias",
+                        )
                     )
-                )
+                    matched = True
+                    break
+            if matched:
                 break
 
     # Pass 2: Substring matching for unmapped canonical fields
@@ -181,7 +203,18 @@ def map_columns(
             if col in used_columns:
                 continue
 
+            # Skip percentage / rate / probability columns when mapping wait_time or counts
+            if canonical_field in ("wait_time", "offered", "abandoned", "completed"):
+                if any(x in norm for x in ("pct", "percent", "rate", "prob", "intensity")):
+                    continue
+
+            # Skip ID columns when mapping timestamp
+            if canonical_field == "timestamp":
+                if norm.endswith("_id") or norm == "id":
+                    continue
+
             for alias in aliases:
+                # Require at least 4 characters or exact word boundary
                 if (len(alias) > 3 and alias in norm) or (len(norm) > 3 and norm in alias):
                     canonical_to_source[canonical_field] = col
                     used_columns.add(col)

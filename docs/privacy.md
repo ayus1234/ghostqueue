@@ -50,3 +50,5 @@ GhostQueue analyzes operational queue dynamics and abandonment patterns without 
 2. **PII Header Detection**: If sensitive column headers are identified (matching patterns such as `ssn`, `social_security`, `credit_card`, `patient_name`), GhostQueue appends clear advisory warnings to the API response while completing analysis on the operational columns.
 3. **No Raw Logging**: Application loggers are restricted to metadata (e.g. `row_count`, `column_count`, `dataset_name`). Raw row data, cell values, and payload buffers are strictly excluded from logging statements.
 4. **Isolated Memory Eviction**: Once the response is serialized and returned to the caller, the underlying dataset is discarded from memory.
+5. **Ghost Replay In-Memory Streaming**: Replay reconstruction for multi-event journey logs is conducted purely in volatile memory. Sessions, state transitions, and ghost points are calculated on-the-fly; neither individual journey steps nor raw event uploads are persisted to databases or disk.
+

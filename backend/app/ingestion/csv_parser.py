@@ -38,8 +38,8 @@ def parse_csv_bytes(raw_bytes: bytes, filename: str = "dataset.csv") -> pd.DataF
         raise EmptyDatasetError(f"Uploaded CSV file '{filename}' contains no readable content.")
 
     try:
-        # Read into pandas DataFrame
-        df = pd.read_csv(StringIO(decoded_text))
+        # Read into pandas DataFrame (supporting metadata comments starting with #)
+        df = pd.read_csv(StringIO(decoded_text), comment="#")
     except Exception as exc:
         raise MalformedDatasetError(f"Failed to parse CSV file '{filename}': {str(exc)}")
 

@@ -37,8 +37,9 @@ data/**/*.json
 *.tsv
 *.parquet
 !tests/test_data/**
+!data/fixtures/**
 
-# JSON rules: ignore raw json data while preserving project config files
+# JSON rules: ignore raw json data while preserving project config files and fixtures
 *.json
 !package.json
 !package-lock.json
@@ -46,3 +47,5 @@ data/**/*.json
 !tsconfig.*.json
 !components.json
 !pyrightconfig.json
+!data/fixtures/**
+

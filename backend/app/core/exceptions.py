@@ -38,3 +38,18 @@ class InsufficientDataError(GhostQueueException):
     """Raised when required analytical fields cannot be mapped or derived."""
 
     pass
+
+
+class DatasetNotFoundError(GhostQueueException):
+    """Raised when a requested registered dataset is not found."""
+
+    def __init__(self, message: str = "Requested dataset not found in registry."):
+        super().__init__(message, status_code=404)
+
+
+class SessionNotFoundError(GhostQueueException):
+    """Raised when a requested session is not found in an event log."""
+
+    def __init__(self, message: str = "Requested session not found."):
+        super().__init__(message, status_code=404)
+

@@ -111,6 +111,81 @@ class GhostReplay(BaseModel):
     reason: Optional[str] = None
 
 
+class ReplayEventDetail(BaseModel):
+    step_index: int
+    event_id: Optional[str] = None
+    timestamp: str
+    elapsed_seconds: float
+    event_type: str
+    queue: Optional[str] = None
+    stage: Optional[str] = None
+    status: str
+    wait_duration_seconds: float = 0.0
+    actor: Optional[str] = None
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+
+
+class GhostPointDetail(BaseModel):
+    stage: str
+    queue: str
+    step_index: int
+    event_type: str
+    wait_duration_seconds: float
+    time_to_abandonment_seconds: float
+    last_observed_state: Dict[str, Any] = Field(default_factory=dict)
+    exit_trigger: Optional[str] = None
+
+
+class SessionReplayResponse(BaseModel):
+    session_id: str
+    outcome: str  # "completed" | "abandoned" | "unresolved"
+    terminal_event_detected: bool
+    total_steps: int
+    journey_duration_seconds: float
+    time_to_abandonment_seconds: Optional[float] = None
+    ghost_point: Optional[GhostPointDetail] = None
+    last_observed_state: Optional[Dict[str, Any]] = None
+    queues_traversed: List[str] = Field(default_factory=list)
+    stages_traversed: List[str] = Field(default_factory=list)
+    events: List[ReplayEventDetail] = Field(default_factory=list)
+
+
+class ReplayAnalysisResponse(BaseModel):
+    total_sessions: int
+    completed: int
+    abandoned: int
+    unresolved: int
+    abandonment_rate_resolved: float  # abandoned / (completed + abandoned) * 100
+    avg_time_to_abandonment_seconds: Optional[float] = None
+    median_time_to_abandonment_seconds: Optional[float] = None
+    common_ghost_stage: Optional[str] = None
+    common_ghost_queue: Optional[str] = None
+    abandonment_by_stage: Dict[str, int] = Field(default_factory=dict)
+    abandonment_by_queue: Dict[str, int] = Field(default_factory=dict)
+    sample_sessions: List[SessionReplayResponse] = Field(default_factory=list)
+    privacy_status: "PrivacyStatus" = Field(default_factory=lambda: PrivacyStatus())
+
+
+class DatasetRegistryEntry(BaseModel):
+    dataset_id: str
+    name: str
+    publisher: str
+    source_url: str
+    license: str
+    record_status: str  # "public_dataset" | "synthetic_schema_fixture" | "synthetic_replay_fixture"
+    source_type: str    # "verified_public_source" | "published_research_schema" | "synthetic_journey_demo"
+    real_data_available_in_repo: bool
+    redistribution_license: str
+    doi: Optional[str] = None
+    description: str
+    record_type: str    # "aggregate" | "event"
+    original_columns: List[str]
+    canonical_mapping: Dict[str, str]
+    capabilities: DatasetCapabilities
+    fixture_path: str
+    provenance: str
+
+
 # Privacy Status
 class PrivacyStatus(BaseModel):
     persisted: bool = False

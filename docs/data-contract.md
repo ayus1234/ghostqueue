@@ -138,3 +138,28 @@ Every ingested dataset is classified into one of two primary record models:
   "warnings": []
 }
 ```
+
+---
+
+## 7. Ghost Replay Event Journey Contract
+
+For datasets where `capabilities.ghost_replay == true`, individual sessions can be reconstructed chronologically:
+
+### Schema Fields
+- `session_id`: Unique identifier across all steps in the customer interaction.
+- `event_id`: Unique step-level identifier.
+- `timestamp`: Event creation timestamp used for monotonic chronological sorting.
+- `event_type`: Step or transition name (`session_enter`, `queue_joined`, `user_abandoned`, `service_completed`).
+- `queue`: Queue identifier at this step.
+- `stage`: Lifecycle or workflow phase (`IVR_Menu`, `Waiting_Room`, `KYC_Verification`, `Resolution`).
+- `status`: State lifecycle tag (`in_progress`, `queued`, `connected`, `abandoned`, `completed`).
+- `wait_duration`: Time spent waiting at this specific step (in seconds).
+- `actor`: Initiator of this transition (`customer`, `system`, `agent`).
+- `metadata`: Contextual attributes (queue position, exit reason, transfer target).
+
+### Outcome Determination Rules
+1. **Explicit Abandonment Event**: If an event with status/type `abandoned`, `hangup`, `timeout`, `cancelled`, or `dropped` is observed $\rightarrow$ session outcome is `abandoned`.
+2. **Explicit Completion Event**: If an event with status/type `completed`, `resolved`, `handled`, or `success` is observed $\rightarrow$ session outcome is `completed`.
+3. **No Terminal Event**: If no terminal event is present $\rightarrow$ session outcome is strictly `unresolved`.
+4. **Integrity Rule**: GhostQueue **NEVER** infers `unresolved == abandoned`. Unresolved journeys represent active, in-flight, or unlogged handoffs.
+

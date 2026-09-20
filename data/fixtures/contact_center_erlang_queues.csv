@@ -1,0 +1,5 @@
+queue_id,queue_name,sla_pct,sla_sec,patience_sec
+1,Billing Support,0.8,20,75
+2,Technical Support,0.8,30,90
+3,Sales,0.9,15,45
+4,Retention,0.75,25,60
