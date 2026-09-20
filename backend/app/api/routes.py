@@ -20,7 +20,18 @@ from app.models.schemas import (
     ReplayAnalysisResponse,
     SessionReplayResponse,
     DatasetRegistryEntry,
+    SimulationScenarioRequest,
+    SimulationResponse,
+    ScenarioComparisonRequest,
+    ScenarioComparisonResponse,
+    InvestigationReport,
 )
+from app.simulation.engine import (
+    extract_baseline_metrics,
+    simulate_scenario,
+    compare_scenarios,
+)
+from app.ai.factory import get_investigator_provider
 import os
 import pandas as pd
 
@@ -248,3 +259,87 @@ def analyze_benchmark_dataset(dataset_id: str):
             "entry": entry.model_dump(),
             "analysis": analysis_res.model_dump(),
         }
+
+
+@router.post("/simulation/run", response_model=SimulationResponse)
+def run_simulation_endpoint(payload: SimulationScenarioRequest) -> SimulationResponse:
+    """Execute a what-if capacity/demand operational simulation against a baseline dataset.
+
+    Guarantees:
+    - Pure in-memory calculation
+    - Explicit simulation disclaimer (never presented as prediction)
+    - Grounded in empirical queue pressure elasticity
+    """
+    dataset_id = payload.dataset_id or "contact-center-erlang"
+    try:
+        df, fmt = load_registered_fixture(dataset_id)
+        analysis = run_full_analysis(df, os.path.basename(dataset_id), fmt)
+        baseline = extract_baseline_metrics(df, analysis)
+    except DatasetNotFoundError:
+        raise HTTPException(status_code=404, detail=f"Dataset '{dataset_id}' not found in registry.")
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Failed to load baseline metrics: {str(exc)}")
+
+    return simulate_scenario(baseline, payload)
+
+
+@router.post("/simulation/compare", response_model=ScenarioComparisonResponse)
+def compare_scenarios_endpoint(payload: ScenarioComparisonRequest) -> ScenarioComparisonResponse:
+    """Compare multiple operational what-if scenarios against the baseline."""
+    dataset_id = payload.dataset_id or "contact-center-erlang"
+    try:
+        df, fmt = load_registered_fixture(dataset_id)
+        analysis = run_full_analysis(df, os.path.basename(dataset_id), fmt)
+        baseline = extract_baseline_metrics(df, analysis)
+    except DatasetNotFoundError:
+        raise HTTPException(status_code=404, detail=f"Dataset '{dataset_id}' not found in registry.")
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Failed to load baseline metrics: {str(exc)}")
+
+    return compare_scenarios(baseline, payload.scenarios)
+
+
+@router.post("/investigator/analyze", response_model=InvestigationReport)
+async def run_investigation_endpoint(
+    dataset_id: Optional[str] = Query(None),
+    file: Optional[UploadFile] = File(None),
+) -> InvestigationReport:
+    """Generate evidence-backed diagnostic investigation findings from dataset analytics.
+
+    Integrity & Privacy Guarantees:
+    - Strict classification into OBSERVATIONS, HYPOTHESES, and NEXT ACTIONS
+    - No unsupported causal claims
+    - Zero persistence of raw dataset
+    - Safe deterministic execution with optional LLM fallback
+    """
+    df = None
+    fmt = "csv"
+    filename = "dataset.csv"
+
+    if file is not None:
+        filename = file.filename or "dataset.csv"
+        raw_bytes = await file.read()
+        if len(raw_bytes) > MAX_FILE_SIZE_BYTES:
+            raise HTTPException(status_code=413, detail="Dataset size exceeds the 25MB limit.")
+        try:
+            df, fmt = parse_dataset(filename, raw_bytes)
+        except GhostQueueException as gqe:
+            raise HTTPException(status_code=gqe.status_code, detail=gqe.message)
+        except Exception as exc:
+            raise HTTPException(status_code=400, detail=f"Unable to parse dataset: {str(exc)}")
+    else:
+        target_id = dataset_id or "contact-center-erlang"
+        try:
+            df, fmt = load_registered_fixture(target_id)
+            filename = target_id
+        except DatasetNotFoundError:
+            raise HTTPException(status_code=404, detail=f"Dataset '{target_id}' not found in registry.")
+
+    analysis = run_full_analysis(df, filename, fmt)
+    replay = None
+    if analysis.capabilities.ghost_replay:
+        replay = run_replay_analysis(df)
+
+    provider = get_investigator_provider()
+    return provider.generate_investigation(analysis, replay)
+

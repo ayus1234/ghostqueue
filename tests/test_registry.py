@@ -52,6 +52,7 @@ def test_synthetic_replay_demo_metadata():
     assert entry is not None
     assert entry.record_status == "synthetic_replay_fixture"
     assert entry.source_type == "synthetic_journey_demo"
+    assert entry.real_data_available_in_repo is False
     assert entry.capabilities.ghost_replay is True
     assert entry.record_type == "event"
 

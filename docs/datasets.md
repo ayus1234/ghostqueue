@@ -132,7 +132,7 @@ In strict compliance with the published data restriction:
 - **Dataset Name**: *Ghost Replay Multi-Event Journey Demo*
 - **Publisher**: GhostQueue Engineering
 - **License**: Apache-2.0 / Project Internal
-- **Real Data Available in Repo**: **True** (Synthetic fixture)
+- **Real Data Available in Repo**: **False** (Synthetic demo fixture, not real-world source data)
 - **Fixture Paths**: `data/fixtures/synthetic_replay_journey.json` and `data/fixtures/synthetic_replay_journey.csv`
 
 ### Purpose

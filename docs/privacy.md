@@ -51,4 +51,7 @@ GhostQueue analyzes operational queue dynamics and abandonment patterns without 
 3. **No Raw Logging**: Application loggers are restricted to metadata (e.g. `row_count`, `column_count`, `dataset_name`). Raw row data, cell values, and payload buffers are strictly excluded from logging statements.
 4. **Isolated Memory Eviction**: Once the response is serialized and returned to the caller, the underlying dataset is discarded from memory.
 5. **Ghost Replay In-Memory Streaming**: Replay reconstruction for multi-event journey logs is conducted purely in volatile memory. Sessions, state transitions, and ghost points are calculated on-the-fly; neither individual journey steps nor raw event uploads are persisted to databases or disk.
+6. **What-If Simulation Ephemeral Computation**: Simulation runs evaluate mathematical queue pressure equations against in-memory baseline aggregates. Scenario inputs, parameter deltas, and projected outcomes are computed on-the-fly without database writes or raw file persistence.
+7. **AI Investigator Context Isolation**: Diagnostic analysis never sends raw dataset records, individual contact logs, or PII identifiers to external LLMs. Only high-level statistical summaries (Ghost Rate, zone rankings, aggregate wait times) are provided as investigative context.
+
 

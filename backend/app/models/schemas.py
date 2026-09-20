@@ -209,28 +209,112 @@ class DatasetAnalysisResponse(BaseModel):
 
 
 # AI Investigator Schemas
+class InvestigationObservation(BaseModel):
+    title: str
+    evidence: str
+    metric: str
+    value: Any
+    source_capability: str
+
+
+class InvestigationHypothesis(BaseModel):
+    hypothesis: str
+    supporting_evidence: str
+    confidence: str  # "low" | "medium" | "high"
+    confidence_rationale: str
+
+
+class InvestigationNextAction(BaseModel):
+    action: str
+    reason: str
+    expected_investigative_value: str
+    target_dimension: Optional[str] = None
+    target_value: Optional[str] = None
+
+
+class InvestigationEvidenceLink(BaseModel):
+    concept: str  # "ghost_zone" | "time_period" | "replay_stage" | "queue" | "metric"
+    identifier: str
+    observed_value: str
+    relevance: str
+
+
+class InvestigationReport(BaseModel):
+    executive_finding: str
+    observations: List[InvestigationObservation] = Field(default_factory=list)
+    hypotheses: List[InvestigationHypothesis] = Field(default_factory=list)
+    next_actions: List[InvestigationNextAction] = Field(default_factory=list)
+    evidence_links: List[InvestigationEvidenceLink] = Field(default_factory=list)
+    limitations: List[str] = Field(default_factory=list)
+    provider: str
+    generated_at: str
+    disclaimer: str = (
+        "Investigation findings and hypotheses are diagnostic investigative leads generated from observed analytical metrics, not verified causal determinations."
+    )
+    privacy_status: "PrivacyStatus" = Field(default_factory=lambda: PrivacyStatus())
+
+
+# Backward-compatibility alias
 class InvestigationInsight(BaseModel):
-    observations: List[str] = Field(
-        default_factory=list,
-        description="Factual evidence directly observed from the dataset",
-    )
-    hypotheses: List[str] = Field(
-        default_factory=list,
-        description="Possible contributing factors (clearly flagged as hypotheses, not facts)",
-    )
-    recommended_actions: List[str] = Field(
-        default_factory=list,
-        description="Actionable operational next steps to test or remediate",
-    )
+    observations: List[str] = Field(default_factory=list)
+    hypotheses: List[str] = Field(default_factory=list)
+    recommended_actions: List[str] = Field(default_factory=list)
 
 
 # What-if Simulator Schemas
+class SimulationScenarioRequest(BaseModel):
+    dataset_id: Optional[str] = None
+    scenario_name: str = "Custom Scenario"
+    additional_agents: float = 0.0
+    staffing_change_percent: float = 0.0
+    capacity_change_percent: float = 0.0
+    demand_change_percent: float = 0.0
+    service_time_change_percent: float = 0.0
+    wait_reduction_target_seconds: Optional[float] = None
+
+
+# Backward-compatible alias
 class SimulationParameters(BaseModel):
     staffing_multiplier: float = 1.0
     arrival_load_multiplier: float = 1.0
     capacity_delta: int = 0
 
 
+class SimulationMetricsSummary(BaseModel):
+    offered_demand: int
+    completed_volume: int
+    abandoned_volume: int
+    ghost_rate: float
+    avg_wait_seconds: Optional[float] = None
+    staffing_level: Optional[float] = None
+    service_level_pct: Optional[float] = None
+
+
+class SimulationMetricValue(BaseModel):
+    metric_name: str
+    baseline_value: Optional[float] = None
+    simulated_value: Optional[float] = None
+    delta: Optional[float] = None
+    percent_change: Optional[float] = None
+    unit: str = ""
+
+
+class SimulationResponse(BaseModel):
+    scenario_name: str
+    is_simulation: bool = True
+    baseline: SimulationMetricsSummary
+    simulated: SimulationMetricsSummary
+    deltas: Dict[str, float] = Field(default_factory=dict)
+    comparison_metrics: List[SimulationMetricValue] = Field(default_factory=list)
+    assumptions: List[str] = Field(default_factory=list)
+    methodology: str
+    disclaimer: str = (
+        "This is a scenario simulation based on observed dataset relationships and stated assumptions. It is not a prediction or guarantee of future outcomes."
+    )
+    limitations: List[str] = Field(default_factory=list)
+
+
+# Backward-compatible alias
 class SimulationResult(BaseModel):
     is_simulation: bool = True
     disclaimer: str = (
@@ -242,3 +326,18 @@ class SimulationResult(BaseModel):
     projected_avg_wait: float
     delta_ghost_rate: float
     delta_avg_wait: float
+
+
+class ScenarioComparisonRequest(BaseModel):
+    dataset_id: Optional[str] = None
+    scenarios: List[SimulationScenarioRequest] = Field(default_factory=list)
+
+
+class ScenarioComparisonResponse(BaseModel):
+    is_simulation: bool = True
+    baseline: SimulationMetricsSummary
+    scenarios: List[SimulationResponse] = Field(default_factory=list)
+    disclaimer: str = (
+        "This is a scenario simulation based on observed dataset relationships and stated assumptions. It is not a prediction or guarantee of future outcomes."
+    )
+
