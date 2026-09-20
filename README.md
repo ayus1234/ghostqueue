@@ -3,7 +3,8 @@
 > **Human Process Abandonment Intelligence**  
 > *Find where people disappear. Understand why. Test what could change.*
 
-[![AWS Deployed](https://img.shields.io/badge/AWS-Live%20Deployment-232F3E?logo=amazon-aws&logoColor=white)](http://44.212.26.59/)
+[![SSL / HTTPS](https://img.shields.io/badge/SSL%20%2F%20TLS-Secure%20HTTPS-brightgreen?logo=letsencrypt&logoColor=white)](https://44.212.26.59.sslip.io/)
+[![AWS Deployed](https://img.shields.io/badge/AWS-Live%20Deployment-232F3E?logo=amazon-aws&logoColor=white)](https://44.212.26.59.sslip.io/)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16%20(Turbopack)-000000?logo=next.js&logoColor=white)](https://nextjs.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
@@ -12,17 +13,17 @@
 
 ---
 
-## 🌐 Live Public Deployment
+## 🌐 Live Public Deployment (HTTPS Enabled)
 
-GhostQueue is deployed on AWS and publicly accessible:
+GhostQueue is deployed on AWS with **end-to-end SSL/TLS encryption (HTTPS)** and automatic HTTP-to-HTTPS redirection:
 
-| Service | URL | Description |
+| Service | Secure HTTPS URL | Description |
 | :--- | :--- | :--- |
-| **Frontend Application** | **[http://44.212.26.59/](http://44.212.26.59/)** | Production Next.js 16 web dashboard with Light/Dark theming |
-| **API Health Check** | **[http://44.212.26.59/health](http://44.212.26.59/health)** | Live FastAPI service health & runtime status |
-| **Interactive API Docs** | **[http://44.212.26.59/docs](http://44.212.26.59/docs)** | Swagger UI for executing and testing API endpoints |
-| **Direct Backend API** | **[http://44.212.26.59:8000/](http://44.212.26.59:8000/)** | Direct Uvicorn ASGI port |
-| **AWS Public DNS** | **[http://ec2-44-212-26-59.compute-1.amazonaws.com/](http://ec2-44-212-26-59.compute-1.amazonaws.com/)** | EC2 hostname alias |
+| **Frontend Application** | **[https://44.212.26.59.sslip.io/](https://44.212.26.59.sslip.io/)** | Production Next.js 16 web dashboard with Light/Dark theming |
+| **API Health Check** | **[https://44.212.26.59.sslip.io/health](https://44.212.26.59.sslip.io/health)** | Live FastAPI service health & runtime status |
+| **Interactive API Docs** | **[https://44.212.26.59.sslip.io/docs](https://44.212.26.59.sslip.io/docs)** | Swagger UI for executing and testing API endpoints |
+| **Alternative Secure URL** | **[https://44.212.26.59.nip.io/](https://44.212.26.59.nip.io/)** | Secondary trusted TLS domain alias |
+| **HTTP Auto-Redirect** | `http://44.212.26.59/` | Permanent 301 redirect to secure HTTPS |
 
 ---
 
@@ -33,14 +34,16 @@ The application is deployed on AWS with genuine, production-grade infrastructure
 ```
                           [ Public Internet / User ]
                                       │
-                                      ▼
-                        AWS EC2 (Ubuntu 24.04 LTS)
-                           [ Security Group: sg ]
-                        (Ports 80, 8000, 3000 Open)
+                         HTTPS (Port 443) / HTTP (Port 80)
                                       │
                                       ▼
-                             Nginx Reverse Proxy
-                                  (Port 80)
+                        AWS EC2 (Ubuntu 24.04 LTS)
+                        [ Security Group: ports 443, 80 ]
+                                      │
+                                      ▼
+                         Nginx Reverse Proxy & SSL
+                    (Let's Encrypt TLS 1.3 Termination)
+                   (Auto 301 Redirect from HTTP to HTTPS)
                      ┌────────────────┴────────────────┐
                      │                                 │
               location /                        location /api/
@@ -62,9 +65,10 @@ The application is deployed on AWS with genuine, production-grade infrastructure
 ```
 
 - **Amazon EC2**: High-performance compute (`t3.small`) hosting both the Node.js frontend and Python FastAPI backend under systemd supervision.
-- **Nginx Reverse Proxy**: Eliminates cross-origin CORS overhead by serving web assets and proxying `/api/` on port 80.
+- **SSL/TLS Encryption**: Verified TLS 1.3 certificates via Let's Encrypt with automated certbot renewals and strict HTTP-to-HTTPS redirection.
+- **Nginx Reverse Proxy**: Eliminates cross-origin CORS overhead by serving web assets and proxying `/api/` over HTTPS.
 - **AWS IAM & Amazon Bedrock**: Configured with `AmazonBedrockFullAccess` to empower the AI Investigator with root-cause intelligence.
-- **Zero Localhost Leaks**: Production build strictly relies on dynamic same-origin API calls.
+- **Zero Localhost Leaks**: Production build strictly relies on dynamic same-origin API calls over secure HTTPS.
 
 ---
 
