@@ -47,5 +47,6 @@ data/**/*.json
 !tsconfig.*.json
 !components.json
 !pyrightconfig.json
-!data/fixtures/**
-
+# Next.js auto-generated agent files
+AGENTS.md
+CLAUDE.md

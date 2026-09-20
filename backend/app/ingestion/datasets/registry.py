@@ -166,10 +166,12 @@ def resolve_fixture_path(relative_path: str) -> str:
     if os.path.exists(cwd_path):
         return cwd_path
 
-    # Try relative to repository root if running from backend
-    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
-    candidate = os.path.join(repo_root, relative_path)
-    if os.path.exists(candidate):
-        return candidate
+    # Try relative to repository root from package location
+    pkg_dir = os.path.dirname(__file__)
+    for up_levels in (3, 4):
+        dots = [".."] * up_levels
+        candidate = os.path.abspath(os.path.join(pkg_dir, *dots, relative_path))
+        if os.path.exists(candidate):
+            return candidate
 
     return relative_path
