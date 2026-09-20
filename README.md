@@ -1,4 +1,4 @@
-# GhostQueue <img src="docs/icon.svg" width="34" height="34" valign="middle" alt="GhostQueue Icon" />
+# GhostQueue <img src="docs/icon.png" width="34" height="34" valign="middle" alt="GhostQueue Icon" />
 
 > **Human Process Abandonment Intelligence**  
 > *Find where people disappear. Understand why. Test what could change.*
@@ -33,7 +33,7 @@ GhostQueue is deployed on AWS with **end-to-end SSL/TLS encryption (HTTPS)** and
 | Service | Secure HTTPS URL | Description |
 | :--- | :--- | :--- |
 | **🎬 Demo Video** | **[https://drive.google.com/file/d/1YXwpFSI3xwr1x3jutgWcElojKXQExDut/view?usp=sharing](https://drive.google.com/file/d/1YXwpFSI3xwr1x3jutgWcElojKXQExDut/view?usp=sharing)** | 3-minute video walkthrough covering architecture and live UI |
-| **<img src="docs/icon.svg" width="16" height="16" valign="middle" alt="GhostQueue"/> Frontend Application** | **[https://44.212.26.59.sslip.io/](https://44.212.26.59.sslip.io/)** | Production Next.js 16 web dashboard with custom GhostQueue favicon & Light/Dark theming |
+| **<img src="docs/icon.png" width="18" height="18" valign="middle" alt="GhostQueue"/> Frontend Application** | **[https://44.212.26.59.sslip.io/](https://44.212.26.59.sslip.io/)** | Production Next.js 16 web dashboard with custom GhostQueue favicon & Light/Dark theming |
 | **🩺 API Health Check** | **[https://44.212.26.59.sslip.io/health](https://44.212.26.59.sslip.io/health)** | Live FastAPI service health & runtime status |
 | **📖 Interactive API Docs** | **[https://44.212.26.59.sslip.io/docs](https://44.212.26.59.sslip.io/docs)** | Swagger UI with custom GhostQueue favicon for testing API endpoints |
 | **🔐 Alternative Secure URL** | **[https://44.212.26.59.nip.io/](https://44.212.26.59.nip.io/)** | Secondary trusted TLS domain alias with custom favicon |
