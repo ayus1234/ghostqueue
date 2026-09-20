@@ -152,8 +152,8 @@ def simulate_scenario(
         sim_ghost_rate = min(99.0, max(0.0, g0 * load_ratio))
 
     # 6. Simulated volumes
-    sim_offered = max(0, int(round(d0 * demand_mult)))
-    sim_abandoned = min(sim_offered, max(0, int(round(sim_offered * (sim_ghost_rate / 100.0)))))
+    sim_offered = max(0, round(d0 * demand_mult))
+    sim_abandoned = min(sim_offered, max(0, round(sim_offered * (sim_ghost_rate / 100.0))))
     sim_completed = max(0, sim_offered - sim_abandoned)
 
     # 7. Simulated staffing
