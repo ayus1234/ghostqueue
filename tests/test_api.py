@@ -1,4 +1,3 @@
-"""API integration tests using TestClient and synthetic datasets."""
 from pathlib import Path
 from fastapi.testclient import TestClient
 from app.main import app

@@ -45,3 +45,4 @@ data/**/*.json
 !tsconfig.json
 !tsconfig.*.json
 !components.json
+!pyrightconfig.json

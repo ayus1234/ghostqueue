@@ -1,4 +1,3 @@
-"""Tests for dataset capability detection."""
 import pandas as pd
 from app.ingestion.profiler import evaluate_capabilities
 

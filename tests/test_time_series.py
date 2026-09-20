@@ -25,7 +25,9 @@ def test_time_series_peak_detection():
     assert result.available is True
     assert len(result.periods) == 3
     # 10:00 had 45 abandoned (highest volume)
+    assert result.peak_abandonment_period is not None
     assert "10:00" in result.peak_abandonment_period
+    assert result.peak_ghost_rate_period is not None
     assert "10:00" in result.peak_ghost_rate_period
 
 
@@ -35,4 +37,5 @@ def test_time_series_missing_timestamp():
     result = analyze_time_series(df, mapped, "aggregate")
 
     assert result.available is False
+    assert result.reason is not None
     assert "Timestamp or time interval column not present" in result.reason
