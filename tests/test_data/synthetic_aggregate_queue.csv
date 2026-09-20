@@ -1,0 +1,9 @@
+queue_name,date_time,calls_offered,calls_answered,calls_abandoned,avg_wait_seconds,agents
+Support_Tier_1,2026-03-20 09:00:00,120,95,25,48.5,8
+Support_Tier_1,2026-03-20 10:00:00,150,110,40,65.2,8
+Card_Services,2026-03-20 09:00:00,80,75,5,18.0,6
+Card_Services,2026-03-20 10:00:00,90,82,8,22.4,6
+Escalations,2026-03-20 09:00:00,40,28,12,120.0,3
+Escalations,2026-03-20 10:00:00,50,32,18,145.5,3
+Billing_Support,2026-03-20 09:00:00,60,58,2,12.1,5
+Billing_Support,2026-03-20 10:00:00,70,66,4,14.3,5

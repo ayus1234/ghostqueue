@@ -1,0 +1,4 @@
+department,total_calls,lost_calls
+Outpatient,500,75
+Inpatient_Admit,300,30
+Emergency_Triage,800,160

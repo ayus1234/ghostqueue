@@ -1,0 +1,12 @@
+session_id,timestamp,stage,event_type,wait_time
+sess_001,2026-03-20 09:01:00,IVR_Menu,menu_selection,5
+sess_001,2026-03-20 09:02:15,Hold_Queue,enter_queue,15
+sess_001,2026-03-20 09:05:30,Hold_Queue,abandoned_hangup,210
+sess_002,2026-03-20 09:02:00,IVR_Menu,menu_selection,4
+sess_002,2026-03-20 09:03:00,Hold_Queue,enter_queue,10
+sess_002,2026-03-20 09:04:20,Agent_Desk,answered_connected,80
+sess_003,2026-03-20 09:10:00,IVR_Menu,menu_selection,6
+sess_003,2026-03-20 09:12:00,Hold_Queue,enter_queue,20
+sess_003,2026-03-20 09:18:40,Hold_Queue,abandoned_timeout,400
+sess_004,2026-03-20 09:15:00,IVR_Menu,menu_selection,5
+sess_004,2026-03-20 09:16:10,Agent_Desk,answered_connected,70

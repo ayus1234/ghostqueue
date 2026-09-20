@@ -36,6 +36,7 @@ data/**/*.json
 *.csv
 *.tsv
 *.parquet
+!tests/test_data/**
 
 # JSON rules: ignore raw json data while preserving project config files
 *.json

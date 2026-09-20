@@ -1,0 +1,5 @@
+queue,offered,abandoned,wait_time
+Queue_A,100,20,45.2
+Queue_B,invalid_num,--,N/A
+Queue_C,50,10,missing
+Queue_D,80,15,32.0

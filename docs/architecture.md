@@ -62,3 +62,43 @@
 - **AI Intelligence**: Amazon Bedrock invoking Anthropic Claude 3 Haiku for operational root-cause hypothesis generation using only sanitized analytical summaries.
 - **Ephemeral Storage**: Amazon S3 bucket with 1-day lifecycle expiration rule for temporary file parsing (when file size exceeds direct memory buffers).
 - **Metadata**: Amazon DynamoDB for pre-computed demo benchmark summaries.
+
+## 5. Implemented Data Engine Pipeline (Step 2)
+
+The core data ingestion and canonical analytical engine is organized as follows:
+
+```
+[Raw Bytes] -> [csv_parser / json_parser] -> [pandas.DataFrame]
+                                                      |
+                                                      v
+                                            [mapper.map_columns]
+                                                      |
+                         +----------------------------+----------------------------+
+                         |                                                         |
+                         v                                                         v
+             [profiler.evaluate_capabilities]                        [analytics.engine.calculate_summary]
+                         |                                                         |
+                         v                                                         v
+              [DatasetCapabilities]                                       [AnalyticalSummary]
+                         |                                                         |
+                         +----------------------------+----------------------------+
+                                                      |
+                                                      v
+                                        [zones.calculate_ghost_zones]
+                                                      |
+                                                      v
+                                     [time_series.analyze_time_series]
+                                                      |
+                                                      v
+                                          [DatasetAnalysisResponse]
+```
+
+### Module Responsibilities
+- `app/ingestion/csv_parser.py`: Resilient in-memory CSV parser testing multiple encodings (UTF-8, UTF-8-BOM, Latin-1, CP1252) and validating tabular structures.
+- `app/ingestion/json_parser.py`: In-memory JSON parser supporting both bare arrays of objects and standard wrapped envelopes (`{"data": [...]}`).
+- `app/ingestion/mapper.py`: Two-pass prioritized alias resolution engine mapping source headers to canonical concepts with confidence scoring.
+- `app/ingestion/profiler.py`: Evaluates dataset capability flags (preventing false claims of Ghost Replay for aggregate datasets).
+- `app/analytics/engine.py`: Computes core KPIs (offered, completed, abandoned, Ghost Rate, average wait time) and handles division by zero.
+- `app/analytics/zones.py`: Clusters interactions by operational stage/queue and computes deterministic severity ratings (`high`, `medium`, `low`).
+- `app/analytics/time_series.py`: Discovers peak abandonment periods and peak Ghost Rate intervals.
+- `app/core/privacy.py`: Enforces ephemeral in-memory processing and scans headers for PII indicators.

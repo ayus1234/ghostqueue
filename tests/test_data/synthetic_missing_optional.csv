@@ -1,0 +1,5 @@
+queue_name,interactions,abandonments
+Front_Desk,200,10
+Pharmacy_Counter,150,45
+Radiology_Checkin,80,22
+Lab_Draw,110,6
